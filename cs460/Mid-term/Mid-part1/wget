@@ -1,0 +1,15 @@
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/defines.h
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/font0
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/interrupts.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/kbd.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/keymap
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/keymap2
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/mk
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/string.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/t.bin
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/t.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/t.ld
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/timer.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/ts.s
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/type.h
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB3/vid.c

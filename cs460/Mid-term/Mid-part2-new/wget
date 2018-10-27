@@ -1,0 +1,15 @@
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/LAB4.bin
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/exceptions.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/font0
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/kbd.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/kernel.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/keymap
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/mk
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/queue.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/string.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/t.bin
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/t.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/t.ld
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/ts.s
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/type.h
+wget https://www.eecs.wsu.edu/~cs460/samples/LAB4/vid.c

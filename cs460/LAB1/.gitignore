@@ -1,0 +1,8 @@
+bs.s
+ext2.h
+mk
+mtximage
+*.o
+mk.sh
+q.sh
+a.out

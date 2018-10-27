@@ -1,0 +1,10 @@
+*.bin
+defines.h
+interrupts.c
+string3.c
+timer.c
+vid.c
+font0
+mk
+t.ld
+type.h

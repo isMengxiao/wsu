@@ -1,0 +1,60 @@
+<html>
+<body>
+<pre>  
+                    CS460 LAB5 Assignment
+                      DUE: 10-19-2018
+PART 1:
+
+Base code: Download files from samples/LAB5.post. Run mk
+
+P1 runs in Umode at PA = 8MB. Its VA range is in [2GB, 2GB + 1MB].
+Its Umode menu consists of  |getpid|getppid|ps  |chname|, each is a syscall to
+the OS kernel.
+
+1. Add Umode image files u2.c, u2.c, u3.c, u4.c.
+   When kerenl starts, let P0 kfork() P1, P2, P3, P4, each excuting a different
+   Umode image file u1, u2, u3, u4, respectively.
+
+
+2. Add the Umdoe commands   |switch|sleep|wakeup|getname|   where
+       switch: syscall to switch process
+       sleep : syscall to sleep on its own pid value
+       wakeup: ASK for a value, syscall to wakeup pid
+       getname(char name[64]): syscall to get running proc's name
+
+
+PART 2: 
+
+Instead of embedding u1 u2 u3 u4 as data sections in kernel image,
+copy them as (binary executable) files to the /bin directory of a 
+RAMDISK file system using BLKSIZE=1024:
+
+                       disk
+                        |- bin
+                            |- u1
+                            |- u2
+                            |- u3
+                            |- u4
+
+(1). Use the disk image as a RAMDISK for QEMU:
+
+       qemu-system-arm -M versatilepb -m 128M -kernel t.bin -serial mon:stdio \ 
+       -initrd disk
+ 
+    QEMU loads the RAMDISK at 64MB.
+		    
+(2). When kernel starts, set char *disk = 64MB;
+
+(3). Write a getblk(int blk, char buf[ ]) function, which loads (1KB) disk 
+     block blk into a char buf[BLKSIZE]:
+
+           int getblk(int blk, char *buf)
+
+(4). Write a loader(char *filename, PROC *p) function, which loads the contents
+     of filename, e.g. /bin/u1, to the UMODE image area of process p.
+
+(5). The system functions should be the same as in PART 1.
+
+
+
+

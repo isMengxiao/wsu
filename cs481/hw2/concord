@@ -1,0 +1,70 @@
+#! /usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+from concordance import concordance as con
+import sys
+#from collections import ChainMap
+
+sum = {}
+result = {}
+def concordances(filenames, Boolean_output):
+    for name in filenames:
+        sum[name] = {}
+        with open(name, 'r') as f:
+            sum[name] = con(f, False)
+    for i in sum.keys():
+        for j in sum[i].keys():
+            if j not in result.keys():
+                result[j] = {}
+            result[j][i] = sum[i][j]
+    if Boolean_output:
+        print('<html><body><p>')
+    for i in result:
+        #Start print as teacher want.
+        num = 0
+        for j in result[i]:
+            num += len(result[i][j])
+        if Boolean_output:
+            print('</p>%s (%d): ' % (i, num))
+        else:
+            print('\n%s (%d): ' % (i, num))
+        for j in result[i]:
+            if Boolean_output:
+                print('<br>&emsp;&emsp;%s: ' % j)
+            else:
+                print('\t%s:' % j, end='')
+            unique = 0
+            for a in result[i][j]:
+                if result[i][j].count(a)-1:
+                    if a != unique:
+                        if Boolean_output:
+                            print('%s(%d), ' % (a,result[i][j].count(a)))
+                        else:
+                            print('%s(%d), '%(a,result[i][j].count(a)),end='')
+                        unique = a
+                else:
+                    if Boolean_output:
+                        print('%s, ' % a)
+                    else:
+                        print('%s, ' % a, end='')
+            if not Boolean_output:
+                print('')
+        if Boolean_output:
+            print('</p></body></html>')
+
+def main():
+    Boolean_output = False
+    sysin = sys.argv
+    if len(sysin) < 2:
+        print("Usage: ./concord 'filenames'\
+ or ./concord -h 'filenames' >'outputname'")
+        return
+    if sysin[1] == '-h':
+        Boolean_output = True
+        filepath = sysin[2:]
+    else:
+        filepath = sysin[1:]
+    concordances(filepath, Boolean_output)
+
+if __name__ == "__main__":
+    main()

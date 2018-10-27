@@ -1,0 +1,124 @@
+<html>
+<body>
+<pre>
+             CS460 Takehome Midterm Exam
+  
+           DUE: Friday 10-5-2018 CLASS TIME
+
+1. KBD and UART drivers using sleep/wakeup
+
+   In Chapter 3, both the KBD and UART drivers use interrupts but kgetc() from
+KBD and ugetc()/uputc() from/to UART ports use polling (because Chapter 3 does 
+NOT support processes).
+
+Chapter 5.6.2.1 shows a modified KBD driver using sleep()/wakeup().
+
+Include uart.c file of Chapter 3 in the base code of LAB3.
+Re-write both the KBD and UART drivers using sleep()/wakeup().
+
+NOTE: YOU must demonstrate LAB3 again with the modified KBD and UART drivers.
+
+=============================================================================
+2. Timer Service
+
+   With a hardware timer, e.g. timer0, the OS kernel can provide each process
+with a virtual timer. A process may request an interval timer of t seconds by 
+the command 't', which asks for a time value in t seconds. The 't' command 
+causes the process to sleep for t seconds. When its interval time expires, the 
+timer interrupt handler wakes up the process, allowing it to continue.
+
+The timer requests of processes are maintained in a timer queue containing Time
+Queue Elements (TQEs), which looks like the following:
+
+     tq ->  tqe ->     tqe ->    tqe -> NULL 
+           ------    ------    ------    
+           | 5  |    |  8 |    | 17 |   (time in seconds to expire)
+           | *2 |    | *1 |    | *3 |   (*pid means &proc[pid])
+           ------    ------    ------
+
+At each second, the timer interrupt handler decrements the time field of each 
+TQE by 1. When a TQE's time decrements to 0, the interrupt handler deletes its
+TQE from tq and wakes up the process.
+
+For example, after 5 seconds, it deletes the tqe of PROC2 and wakes up process 
+P2. 
+
+In the above timer queue, the time field of each TQE contains the exact 
+remaining remaining. This has the disadvantage in that the interrupt handler 
+must decrement the time field of each and every TQE. In general, an interrupt 
+handler should complete an interrupt processing as quickly as possible. This is 
+especially important to the timer interrupt handler. Otherwise, it may loss 
+ticks or even never finish. In contrast, when a process enters a timer request,
+it also manipulates the timer queue but the process does not have the same kind
+of critical time constraints. We can speed up the timer interrupt handler by 
+modifying the timer queue as follows.
+
+     tq ->  tqe ->    tqe ->    tqe -> NULL 
+           ------    ------    ------    
+           | 5  |    |  3 |    |  9 |   (relative time)
+           | *2 |    | *1 |    | *3 |   (pointer to proc[pid])
+           ------    ------    ------
+
+In the modified timer queue, the time field of each TQE is relative to the
+cummulative time of all the preceeding TQEs. At each second, the timer interrupt
+handler only needs to decrement the time of the first TQE and process any TQE
+whose time has expired. With this setup, insertion/deletion of a TQE must be
+done carefully. 
+
+REQUIREMENT:
+
+Implement a timer queue to support interval timer requests of processes.
+Add a 't' command, which
+          ask for a time value t in seconds, e.g. 20;
+          enter a TQE into the timer queue;
+          process goes to sleep (e.g. on its TQE)
+
+Modify the timer interrupt handler to:
+          display a wall clock;
+          dispaly the current timer queue every second;
+          handle TQEs and wake up any process whose time has expired;
+
+NOTE: During demo, let P1 kfork() serveral processes, e.g. P2, P3.
+                   P1: 't' : 30
+                   P2: 't' : 20
+                   P3: 't;:   5
+
+==================================================================
+3. READ: Section 5.9:        Semaphores
+         Section 5.10.5.1:   Producer-Consumer Problem using semaphores
+
+                    Requirements:
+
+   (1). Implement P, V operations on semaphores.
+   (2). Implement producer-consumer problem using semaphores:
+
+        Define buffer size N=8 (chars);
+        Let P0 create a producer task P1; with priority = 1
+                      a consumer task P2; with priority = 1
+       
+        P1: get a line of chars from KBD, e.g. abcd; 1234567890; etc.
+            write all chars to buffer; REPEAT 
+     
+        P2: get chars from buffer; print to LCD screen; REPEAT
+
+
+======================================================================
+4. Section 5.13.2 describes PIPEs in Unix/Linux, and the algorithms of 
+   pipe_read()/pipe_write using sleep/wakeup for process synchronization.
+
+   Section 5.13.2.3. Demonstrates PIPE in the Textbook.
+
+                    Requirements
+
+(1). Complete the sample program C5.6 as described in the Text.
+
+
+(2). In a multitasking system, a process may terminate any time.
+     When a pipe READER detects there are no more WRITERs and also no data in
+     the pipe, it returns 0. (Otherwise, it either reads or waits for data).
+     When a pipe has no more READERs, any pipe WRITER must detect this as a 
+     BROKEN PIPE error and terminate also.
+
+     Modify the pipe data structure and algorithms to support these.
+=====================================================================
+
