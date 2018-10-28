@@ -12,6 +12,7 @@ int ubody(char *name)
   u32 mode,  *up;
   mode = getcsr();
   mode = mode & 0x1F;
+  printf("Now running:%s",name);
   //printf("CPU mode=%x\n", mode);
   pid = getpid();
   ppid = getppid();

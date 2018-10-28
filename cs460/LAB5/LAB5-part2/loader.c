@@ -7,7 +7,7 @@ INODE *ip;
 GD *gp;
 DIR *dp;
 SUPER *sup;
-int get_block(int blk, char *buf)
+int getblk(int blk, char *buf)
 {
     char *cp = disk + blk*BLKSIZE;
     memcpy(buf, cp, BLKSIZE);
@@ -33,10 +33,11 @@ u16 search(INODE *ip, char *name)
             {
                 c = dp->name[dp->name_len];
                 dp->name[dp->name_len]= 0;
-                prints(dp->name);putc(' ');
-                if(strcmp(dp->name,name))
+                //kprintf("\n");kputc(' ');
+                if(!strcmp(dp->name,name))
                 {
-                    prints("\n\r");
+                    kprintf("Compare%s,%s",dp->name,name);
+                    //kprintf("\n\r");
                     return ((u16)dp->inode)-1;
                 }
                 dp->name[dp->name_len] = c;
@@ -59,7 +60,7 @@ int tryloader(char *filename, PROC *p)
   if((u16)sup->s_magic != 0xEF53)
       return 0;
   kprintf("perfect!!");
-  getc();
+  kgetc();
 
 }
 
@@ -69,6 +70,7 @@ int loader(char *filename, PROC *p)
   int filesize;
   char   *name[2];
   char *addr;
+  int i;
   u32 *up;
   name[0]="bin";
   name[1]=filename;
@@ -76,7 +78,6 @@ int loader(char *filename, PROC *p)
   sup = (SUPER *)buf2;
   if((u16)sup->s_magic != 0xEF53)
       return 0;
-  kprintf("perfect!!");
   getblk(2, buf1);
 
 // 1. WRITE YOUR CODE to get iblk = bg_inode_table block number
@@ -100,32 +101,30 @@ int loader(char *filename, PROC *p)
 
     filesize = ip->i_size;
     addr = (char *)(0x800000 + (p->pid - 1)*0x100000);
-    kprintf("that-s ok!!!");
-    memcpy(addr, (u16)ip->i_block, filesize);
+    //kprintf("that-s ok!!\n\n\nI find it!!!!");
+    //memcpy(addr, (u16)ip->i_block, 12*BLKSIZE);
 
-/**
-//  if INODE has indirect blocks: get i_block[12] int buf2[  ]
+//    if INODE has indirect blocks: get i_block[12] int buf2[  ]
+    getblk(ip->i_block[12], buf2);
+    kprintf("BLock12:%d\n",ip->i_block[12]);
 
 
-setes(0x1000);  // MTX loading segment = 0x1000
+
+//setes(0x1000);  // MTX loading segment = 0x1000
 
 //3. load 12 DIRECT blocks of INODE into memory
    for (i=0; i<12; i++){
-      getblk((u16)ip->i_block[i], 0);
-      putc('*');
-      inces();
+      kprintf("block:%d  ",(u16)ip->i_block[i]);
+      getblk((u16)ip->i_block[i], addr+i*BLKSIZE);
    }
-
 //4. load INDIRECT blocks, if any, into memory
    if (ip->i_block[12]){
      up = (u32 *)buf2;
      while(*up){
-        getblk((u16)*up, 0); putc('.');
-        inces();
-        up++;
+        getblk((u16)*up, addr+(i++)*BLKSIZE);
+        kprintf("indirblock:%d ", up++);
      }
   }
-  prints("go?"); getc();
-  **/
+//**  **/
 }
 

@@ -67,8 +67,8 @@ PROC *kfork(char *filename)
   addr = (char *)(0x800000 + (p->pid - 1)*0x100000);
 
  // loadelf(filename, p); // p->PROC containing pid, pgdir, etc
-  tryloader(filename, p);
-  //loader(filename, p);
+  //tryloader(filename, p);
+  loader(filename, p);
 
  /**
   if (strcmp(filename, "u1")==0){

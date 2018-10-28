@@ -37,9 +37,9 @@ int mode;
 #include "queue.c"
 #include "kernel.c"
 #include "wait.c"
+#include "loader.c"
 #include "fork.c"
 #include "svc.c"
-#include "loader.c"
 
 char *uimage;
 
@@ -234,9 +234,9 @@ int main()
 
    kprintf("Disk start=%x size=%x\n", disk, size);
    kfork("u1");
-   //kfork("u2");
-  // kfork("u3");
-  // kfork("u4");
+   kfork("u2");
+   kfork("u3");
+   kfork("u4");
   // kfork("/bin/u1");
 
    //for(i=1;i<=4;i++)

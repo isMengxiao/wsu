@@ -1,25 +1,29 @@
-rm ts.o disk.o
-(cd USER; rm u1.o us.o)
+(cd USER; rm *.o)
 
+rm *.o *.elf
 dd if=/dev/zero of=disk bs=1024 count=1024 #create disk file
 mke2fs -b 1024 disk 1024 #format it as a 1MB EXT2 FS
 mount -o loop disk /mnt
 mkdir /mnt/bin
 umount /mnt
-
-(cd USER; ./mku u1;)
+(cd USER; ./mku u1; ./mku u2; ./mku u3; ./mku u4;)
 
 
 arm-none-eabi-objcopy -I binary -O elf32-littlearm -B arm disk disk.o
+
 arm-none-eabi-as -mcpu=arm926ej-s ts.s -o ts.o
 arm-none-eabi-gcc -c -mcpu=arm926ej-s t.c -o t.o
-arm-none-eabi-ld -T t.ld ts.o t.o -Ttext=0x10000 -o t.elf
+arm-none-eabi-ld -T t.ld ts.o t.o disk.o -Ttext=0x10000 -o t.elf
 arm-none-eabi-objcopy -O binary t.elf t.bin
 
 
-./part2-1
 echo ready to go?
 read dummy
+
+
+./part2-1
+
+
 
 
 

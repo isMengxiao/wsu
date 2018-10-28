@@ -1,0 +1,38 @@
+<html>
+<body>
+<pre>
+                CS460 LAB Assignment #6
+                 
+                 DUE & DEMO: 11-2-2018
+
+1. References:
+
+   YOUR ksleep(), kwakeup(), kexit() and kwait() functions
+
+   Base code of LAB6.post: 1MB Umode images; SDC driver for getblk()
+
+   Chapter 7.7.6-7.7.7   : Implementations of fork-exec
+
+   Chapter 7.7.9         : Simple sh for command execution
+                           INIT process 
+
+2. Requirements:
+
+2-1. Use a SDC containing binary executables in /bin directory.
+
+               /bin -- u1, u2, init, sh
+
+     u1, u2: SAME as before with commands |switch|exit|wait|fork|exec|
+
+     init: Run by P1;                 Read 7.7.9 for INIT algorithm and code
+
+     sh: Run by ANY shChild of P1:    Read 7.7.9 for sh algorithm and code
+
+
+2-2. Adapt YOUR loader of LAB5 to load Umode image file from the SDC. 
+
+
+2-3. Let each process Umode image be 2MB, e.g. P1 at 8MB, P2 at 10MB, etc.
+
+
+2-4. Sample solution: samples/LAB6/t.bin, SDC=disk
