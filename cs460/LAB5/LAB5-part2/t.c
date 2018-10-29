@@ -37,7 +37,7 @@ int mode;
 #include "queue.c"
 #include "kernel.c"
 #include "wait.c"
-#include "load.c"
+#include "loader.c"
 #include "fork.c"
 #include "svc.c"
 

@@ -60,8 +60,8 @@ int tryloader(char *filename, PROC *p)
   if (*filename != '/')
       strcpy(name[0], "bin");
   else{
-    while(*filename && (*(++filename)!='/' ))
-      file[i++] = filename;
+    while(*filename && (*(filename)!='/' ))
+      file[i++] = *filename++;
     strcpy(name[0], file);
   }
   i = 0;
