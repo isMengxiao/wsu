@@ -68,7 +68,8 @@ PROC *kfork(char *filename)
 
  // loadelf(filename, p); // p->PROC containing pid, pgdir, etc
   //tryloader(filename, p);
-  loader(filename, p);
+  //loader(filename, p);
+  load(filename, p);
 
  /**
   if (strcmp(filename, "u1")==0){

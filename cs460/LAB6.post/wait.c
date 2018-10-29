@@ -35,7 +35,6 @@ int kexit(int exitvalue)
     PROC *p;
     wk1 = 0;
         return -1;
-    }
 ///2.dispose of children process, if any
     for (i=1; i<NPROC; i++){
         p = &proc[i];

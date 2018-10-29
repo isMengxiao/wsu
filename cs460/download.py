@@ -23,7 +23,7 @@ def main():
     url = 'https://www.eecs.wsu.edu/~cs460/samples/'
     print("Which LAB do you want to download?(Number):")
     num = input()
-    ss = 'LAB' + num
+    ss = num
     url = url + ss
     print(url)
     soup = get_soup(url)
@@ -39,7 +39,7 @@ def main():
             f.write(s)
             f.write('\n')
         t+=1
-    f.write('wget https://www.eecs.wsu.edu/~cs460/lab'+num+'.html')
+    f.write('wget https://www.eecs.wsu.edu/~cs460/'+num+'.html')
     f.write('\n')
     f.close()
     #print(link)

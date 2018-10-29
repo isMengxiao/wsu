@@ -1,4 +1,5 @@
-int body(), goUmode();
+int body();
+int goUmode();
 char *istring = "init start";
 
 PROC *kfork(char *filename)
@@ -27,11 +28,20 @@ PROC *kfork(char *filename)
     p->kstack[SSIZE-15] = (int)goUmode;
     p->ksp = &(p->kstack[SSIZE-28]);
 
-    addr = (char *)(0x800000)
+    load(filename, p);
 
-    loader(filename, p);
+    BA = p->pgdir[2048] & 0xFFF00000;
+    Btop = BA + 0x100000;
+    Busp = Btop - 32;
 
-    p->usp = (int *)VA(0x100000);
+    cp = (char *)Busp;
+    strcpy(cp, istring);
+
+    p->kstack[SSIZE-14] = (int)(0x80100000 - 32);
+
+    p->usp = (int *)(0x80100000 - 32);
+    p->upc = (int *)0x80000000;
+    p->ucpsr = (int *)0x10;
 
     p->kstack[SSIZE-1] = VA(0);
 
@@ -57,12 +67,16 @@ int fork()
     p->status = READY;
     p->priority = 1;
 
-    PA = (char *)running->pgdir[2048] & 0xFFFF0000;
-    CA = (char *)p->pgdir[2048] & 0xFFF0000;
+    PA = (char *)(running->pgdir[2048] & 0xFFFF0000);
+    CA = (char *)(p->pgdir[2048] & 0xFFFF0000);
     memcpy(CA, PA, 0x100000);
     for (i=1; i<=14; i++){
         p->kstack[SSIZE-i] = running->kstack[SSIZE-i];
     }
+    for (i=15; i<=28; i++)
+        p->kstack[SSIZE-i] = 0;
+
+
     p->kstack[SSIZE-14] = 0;
     p->kstack[SSIZE-15] = (int)goUmode;
     p->ksp = &(p->kstack[SSIZE-28]);

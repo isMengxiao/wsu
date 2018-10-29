@@ -1,0 +1,4 @@
+cc main.c util.o cd_ls_pwd.o
+
+a.out
+

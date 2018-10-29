@@ -6,7 +6,7 @@ int exec(char *cmdline) // cmdline=VA in Uspace
     int i, upa, usp;
     char *cp, kline[128], file[32], filename[32];
     PROC *p = running;
-    strcpu(kline, cmdline);
+    strcpy(kline, cmdline);
     cp = kline;
     i = 0;
     while(*cp != ' '){
@@ -24,7 +24,7 @@ int exec(char *cmdline) // cmdline=VA in Uspace
         return -1;
     usp = upa + 0x100000 - 128;
     strcpy((char *)usp, kline);
-    p->usp = (int *)VA(ox100000 - 128);
+    p->usp = (int *)VA(0x100000 - 128);
     for (i=2; i<14; i++)
         p->kstack[SSIZE-i] = 0;
     p->kstack[SSIZE-1] = (int)VA(0);

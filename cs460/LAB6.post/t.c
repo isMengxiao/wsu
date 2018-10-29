@@ -37,11 +37,12 @@ int how;
 #include "fork.c"
 #include "exec.c"
 #include "svc.c"
-#include "disk.c"
 #include "load.c"
 #include "sdc.c"
 
 extern char _binary_ramdisk_start, _binary_ramdisk_end;
+char *disk = (char *)0x400000;
+
 
 void copy_vectors(void) {
     extern uint32_t vectors_start;

@@ -37,7 +37,7 @@ void P(struct semaphore *s)
   ps = int_off();
     s->value--;
     if (s->value < 0){
-       // printf("P: block %d\n", running->pid); 
+       // printf("P: block %d\n", running->pid);
        running->status = BLOCK;
        enqueue(&s->queue, running);
        tswitch();
@@ -127,7 +127,7 @@ int sdc_handler()
            *(u32 *)(base + FIFO) = *(up + i);
        up += 16;
        txcount -= 64;
-       txbuf += 64;            // advance txbuf for next write  
+       txbuf += 64;            // advance txbuf for next write
        status = *(u32 *)(base + STATUS); // read status to clear Tx interrupt
     }
     color = oldcolor;
@@ -146,18 +146,19 @@ int sdc_handler()
   *(u32 *)(base + STATUS_CLEAR) = 0xFFFFFFFF;
   // printf("SDC interrupt handler done\n");
 }
-
+u32 bmap, imap, iblk;
+char buf[1024];
 int verifyExt2()
 {
   // verify SDC is an EXT2 FS: set globals bmap, imap and iblk
   SUPER *sp;
   GD    *gp;
-  
+
   printf("read SUPER block: ");
   getblk(1, buf);
   sp = (SUPER *)&buf[0];
-  printf("magic=%x nblock=%d ninodes=%d\n", sp->s_magic, sp->s_blocks_count, 
-        sp->s_inodes_count);  
+  printf("magic=%x nblock=%d ninodes=%d\n", sp->s_magic, sp->s_blocks_count,
+        sp->s_inodes_count);
 
   printf("read GROUP DESCRIPTOR 0: ");
   getblk(2, buf);
@@ -176,10 +177,10 @@ int sdc_init()
   printf("sdc_init : ");
   *(u32 *)(base + POWER) = (u32)0xBF; // power on
   *(u32 *)(base + CLOCK) = (u32)0xC6; // default CLK
- 
+
   // send init command sequence
   do_command(0,  0,   MMC_RSP_NONE);// idle state
-  do_command(55, 0,   MMC_RSP_R1);  // ready state  
+  do_command(55, 0,   MMC_RSP_R1);  // ready state
   do_command(41, 1,   MMC_RSP_R3);  // argument must not be zero
   do_command(2,  0,   MMC_RSP_R2);  // ask card CID
   do_command(3,  RCA, MMC_RSP_R1);  // assign RCA
@@ -187,17 +188,17 @@ int sdc_init()
   do_command(16, 512, MMC_RSP_R1);  // set data block length
 
   // set interrupt MASK0 registers bits = RxFULL(17)|TxEmpty(18)
-  *(u32 *)(base + MASK0) = (1<<17)|(1<<18); 
+  *(u32 *)(base + MASK0) = (1<<17)|(1<<18);
 
   rxsem.value = 0;
   rxsem.queue = 0;
   txsem.value = 0;
   txsem.queue = 0;
-  
+
   how = BUSYWAIT;
   if (verifyExt2())
      how = NOBUSYWAIT;
-  printf("SDC init done\n"); 
+  printf("SDC init done\n");
 }
 
 int getblk(int blk, char *buf)
@@ -208,8 +209,8 @@ int getblk(int blk, char *buf)
   rxbuf = buf; rxcount = BLKSIZE;
   rxsem.value = 0;
   rxsem.queue = 0;
-  rxdone = 0; 
-  
+  rxdone = 0;
+
   *(u32 *)(base + DATATIMER) = 0xFFFF0000;
   // write data_len to datalength reg
   *(u32 *)(base + DATALENGTH) = BLKSIZE;
@@ -221,7 +222,7 @@ int getblk(int blk, char *buf)
   //printf("dataControl=%x\n", 0x93);
   // 0x93=|9|0011|=|9|DMA=0,0=BLOCK,1=Host<-Card,1=Enable
   *(u32 *)(base + DATACTRL) = 0x93;
-  
+
   if (how == BUSYWAIT)
     while(rxdone==0);
   else

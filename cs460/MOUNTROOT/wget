@@ -1,0 +1,10 @@
+wget https://www.eecs.wsu.edu/~cs460/samples/MOUNTROOT/README
+wget https://www.eecs.wsu.edu/~cs460/samples/MOUNTROOT/a.out
+wget https://www.eecs.wsu.edu/~cs460/samples/MOUNTROOT/cd_ls_pwd.o
+wget https://www.eecs.wsu.edu/~cs460/samples/MOUNTROOT/f
+wget https://www.eecs.wsu.edu/~cs460/samples/MOUNTROOT/main.post.c
+wget https://www.eecs.wsu.edu/~cs460/samples/MOUNTROOT/mk
+wget https://www.eecs.wsu.edu/~cs460/samples/MOUNTROOT/mydisk
+wget https://www.eecs.wsu.edu/~cs460/samples/MOUNTROOT/type.h
+wget https://www.eecs.wsu.edu/~cs460/samples/MOUNTROOT/util.o
+wget https://www.eecs.wsu.edu/~cs460/MOUNTROOT.html

@@ -8,7 +8,6 @@ mkdir /mnt/bin
 umount /mnt
 (cd USER; ./mku u1; ./mku u2; ./mku u3; ./mku u4;)
 
-
 arm-none-eabi-objcopy -I binary -O elf32-littlearm -B arm disk disk.o
 
 arm-none-eabi-as -mcpu=arm926ej-s ts.s -o ts.o

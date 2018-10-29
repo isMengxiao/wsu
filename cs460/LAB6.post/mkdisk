@@ -4,6 +4,6 @@ mount disk /mnt
 (cd /mnt; mkdir bin boot dev etc user)
 umount /mnt
 
-(cd USER; mku u1; mku u2; mku init; mku sh)
+(cd USER; ./mku u1; ./mku u2; ./mku init; ./mku sh)
 echo done SDC disk
  

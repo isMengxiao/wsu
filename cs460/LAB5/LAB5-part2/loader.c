@@ -52,16 +52,29 @@ int tryloader(char *filename, PROC *p)
   int filesize;
   char   *name[2];
   char *addr;
+  char file[128];
+  int i;
   u32 *up;
-  name[0]="bin";
-  name[1]=filename;
-  getblk(1, buf2);
-  sup = (SUPER *)buf2;
-  if((u16)sup->s_magic != 0xEF53)
-      return 0;
-  kprintf("perfect!!");
+  i = 0;
+  kprintf("filename:%c",*filename);
+  if (*filename != '/')
+      strcpy(name[0], "bin");
+  else{
+    while(*filename && (*(++filename)!='/' ))
+      file[i++] = filename;
+    strcpy(name[0], file);
+  }
+  i = 0;
+  while(*filename && (*(filename)!='/' ))
+  {kprintf("++%c",*filename);
+      file[i++] = *filename++;}
+  while(file[i])
+  {kprintf("--%c",file[i]);
+      file[i++] = 0;}
+  strcpy(name[1], file);
+  kprintf("Name[0]:%s",name[0]);
+  kprintf("Name[1]:%s",name[1]);
   kgetc();
-
 }
 
 int loader(char *filename, PROC *p)
