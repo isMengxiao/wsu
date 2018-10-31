@@ -11,7 +11,7 @@ typedef struct ext2_dir_entry_2 DIR;
 SUPER *sp;
 GD    *gp;
 INODE *ip;
-DIR   *dp;   
+DIR   *dp;
 
 #define FREE        0
 #define READY       1

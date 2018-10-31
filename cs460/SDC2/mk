@@ -1,4 +1,4 @@
-mkdisk    # create a ramdisk image file
+./mkdisk
 
 arm-none-eabi-as -mcpu=arm926ej-s ts.s -o ts.o
 arm-none-eabi-gcc -c -mcpu=arm926ej-s t.c -o t.o
