@@ -1,0 +1,7 @@
+dd if=/dev/zero of=mydisk bs=1024 count=1024
+mke2fs -b 1024 mydisk 1024
+mount mydisk /mnt
+(cd /mnt; mkdir bin boot dev etc user; touch file1 file2; ls -l)
+umount /mnt
+
+echo done mydisk 

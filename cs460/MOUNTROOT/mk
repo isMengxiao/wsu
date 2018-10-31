@@ -1,4 +1,5 @@
-cc -m32 main.post.c util.o cd_ls_pwd.o
-
+cc -m32 main.c util.o
 ./a.out
+
+
 
