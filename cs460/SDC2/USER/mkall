@@ -1,4 +1,4 @@
+./mku init
+./mku sh
 ./mku u1
 ./mku u2
-./mku sh
-./mku init

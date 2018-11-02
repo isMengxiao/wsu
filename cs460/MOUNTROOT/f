@@ -1,3 +1,0 @@
-mount -o loop disk A
-ls -l A
-umount A

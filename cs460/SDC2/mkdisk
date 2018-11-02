@@ -6,4 +6,3 @@ umount /mnt
 
 (cd USER; ./mkall)
 echo done SDC disk
- 

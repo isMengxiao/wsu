@@ -1,0 +1,3 @@
+mount -o loop mydisk A
+ls -l A
+umount A

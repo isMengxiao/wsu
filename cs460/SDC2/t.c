@@ -131,8 +131,8 @@ int main()
    init();
 
    //kprintf("RAMdisk start=%x size=%x\n", disk, dsize);
-   kfork("/bin/u1");
-   //kfork("/bin/init");
+   //kfork("/bin/u1");
+   kfork("/bin/init");
    //kfork("/bin/sh");
 
    kprintf("P0 switch to P1 : enter a line : ");

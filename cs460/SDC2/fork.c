@@ -125,12 +125,12 @@ int fork()
 
   printf("running usp=%x linkR=%x\n", running->usp, running->upc);
 
-  PA = (running->pgdir[2048] & 0xFFFf0000);
+  PA = (running->pgdir[2048] & 0xFFFF0000);
   CA = (p->pgdir[2048] & 0xFFFF0000);
   printf("FORK: child  %d uimage at %x\n", p->pid, CA);
   printf("copy Umode image from %x to %x\n", PA, CA);
   // copy 1MB of Umode image
-  memcpy((char *)CA, (char *)PA, 0x200000);
+  memcpy((char *)CA, (char *)PA, 0x100000);
 
   //  p->upc = running->upc;
   p->usp = running->usp;   // both should be VA in their sections
@@ -154,8 +154,8 @@ int fork()
   for (i=1; i <= 14; i++){
      p->kstack[SSIZE-i] = running->kstack[SSIZE-i];
   }
-  for (i=15; i<=28; i++)
-    p->kstack[SSIZE-i] = 0;
+  //for (i=15; i<=28; i++)
+  //  p->kstack[SSIZE-i] = 0;
   //  printf("FIX UP child resume PC to %x\n", running->upc);
   p->kstack[SSIZE - 14] = 0; // child return pid=0
   p->kstack[SSIZE-15] = (int)goUmode;

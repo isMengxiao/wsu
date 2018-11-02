@@ -31,19 +31,19 @@ int tokenize(char *path)
   char *cp;
   cp = path;
   nn = 0;
-  
+
   while (*cp != 0){
-       while (*cp == '/') *cp++ = 0;        
+       while (*cp == '/') *cp++ = 0;
        if (*cp != 0)
-           name[nn++] = cp;         
-       while (*cp != '/' && *cp != 0) cp++;                  
-       if (*cp != 0)   
-           *cp = 0;                   
-       else 
-            break; 
+           name[nn++] = cp;
+       while (*cp != '/' && *cp != 0) cp++;
+       if (*cp != 0)
+           *cp = 0;
+       else
+            break;
        cp++;
   }
-  
+
   printf("n = %d : ", nn);
   for (i=0; i<nn; i++)
        printf("  %s  ", name[i]);
@@ -52,23 +52,23 @@ int tokenize(char *path)
 
 int search(INODE *ip, char *name)
 {
-   int i; 
+   int i;
    char c, *cp;
-   DIR  *dp; 
+   DIR  *dp;
    for (i=0; i<12; i++){
        if ( ip->i_block[i] ){
          printf("i_block[%d] = %d\n", i, ip->i_block[i]);
-	 
+
 	 getblk(ip->i_block[i], b2);
           cp = b2;
           dp = (DIR *)b2;
 
           while (cp < b2 + BLKSIZE){
               c = dp->name[dp->name_len];  // save last byte
-              dp->name[dp->name_len] = 0;   
-	      printf("%s ", dp->name); 
+              dp->name[dp->name_len] = 0;
+	      printf("%s ", dp->name);
               if ( strcmp(dp->name, name) == 0 ){
-		 printf("FOUND %s\n", name); 
+		 printf("FOUND %s\n", name);
                  return(dp->inode);
               }
               dp->name[dp->name_len] = c; // restore that last byte
@@ -81,7 +81,7 @@ int search(INODE *ip, char *name)
 }
 
 int load(char *filename, PROC *p)
-{ 
+{
   int i;
 
   char *addr;
@@ -92,7 +92,7 @@ int load(char *filename, PROC *p)
   INODE *ip;
   DIR   *dp;
   char  *cp, c;
-   
+
   //printf("proc %x loading %s disk at %x\n", p->pid, filename, disk);
   color = CYAN;
 
@@ -110,7 +110,7 @@ int load(char *filename, PROC *p)
   for (i=0; i<nn; i++){
       me = search(ip, name[i]);
       if (me == 0){
-          printf("can't find %s\n", name[i]); 
+          printf("can't find %s\n", name[i]);
           return(0);
       }
       me--;
@@ -120,7 +120,7 @@ int load(char *filename, PROC *p)
 
   addr = (char *)(p->pgdir[2048] & 0xFFF0000);
   printf("loading address = %x\n", addr);
-  
+
   for (i=0; i<12; i++){
     if (ip->i_block[i] == 0)
       break;

@@ -16,22 +16,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int exec(char *cmdline) // cmdline=VA in Uspace
 {
-  int i, upa, usp; 
-  char *cp, kline[128], file[32], filename[32]; 
+  int i, upa, usp;
+  char *cp, kline[128], file[32], filename[32];
   PROC *p = running;
- 
+
   printf("EXEC: proc %d cmdline=%x\n", running->pid, cmdline);
 
   kstrcpy(kline, cmdline);
-  printf("EXEC: proc %d kline = %s\n", running->pid, kline); 
+  printf("EXEC: proc %d kline = %s\n", running->pid, kline);
 
   // first token of kline = filename
   cp = kline; i=0;
   while(*cp != ' '){
     filename[i] = *cp;
     i++; cp++;
-  } 
+  }
   filename[i] = 0;
+  file[0] = 0;
 
   if (filename[0] != '/'){  // relative to /bin
      kstrcpy(file, "/bin/");
@@ -39,14 +40,16 @@ int exec(char *cmdline) // cmdline=VA in Uspace
   kstrcat(file, filename);
 
   upa = p->pgdir[2048] & 0xFFFF0000; // PA of Umode image
+  if (!load(file, p))
+      return -1;
   kprintf("load file %s to %x\n", file, upa);
 
-  // load filename to Umode image 
+  // load filename to Umode image
   load(file, p);
   printf("after loading ");
 
   // copy kline to high end of Ustack in Umode image
-  
+
   usp = upa + 0x100000 - 128;
   printf("usp=%x ", usp);
   kstrcpy((char *)usp, kline);
@@ -55,7 +58,7 @@ int exec(char *cmdline) // cmdline=VA in Uspace
   printf("p->usp = %x ", p->usp);
 
   // set up syscall kstack frame to return to new image at VA=0
-  //   usp             
+  //   usp
   // --|-----goUmode--------------------------------
   //  r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 r12 ULR|
   //-------------------------------------------------

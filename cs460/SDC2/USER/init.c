@@ -16,6 +16,6 @@ int main(int argc, char *argv[])
         }
     }
     else
-        exec("sh");
+        exec("/bin/sh sh start");
 }
 

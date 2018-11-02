@@ -12,10 +12,10 @@ int ls_file(int ino)
         {
             get_block((u16)mip->INODE.i_block[i], 1, buf2);
             dp = (DIR *)buf2;
-            while ((char *)dp < &buf2[BLKSIZE])
-            {
+           // while ((char *)dp < &buf2[BLKSIZE])
+            //{
                 printf("filename:%s,", dp->name);
-            }
+            //}
         }
 
     /***
@@ -57,21 +57,53 @@ int ls_dir(char *dname)
     DIR *dp;
     struct dirent *ep;
 
-    int ino;
+    int ino, i;
     MINODE *mip;
     char buf[BLKSIZE];
-
+    char *cp;
+    int j;
+    INODE *ip;
     ino = getino(dname);
+    printf("ino:%d,",ino);
     mip = iget(dev, ino);
+    ip = &mip->INODE;
 
-    get_block(mip->INODE.i_block[0], 1, buf);
+    printf("iblock:%d,%d", ip->i_block[0],ip->i_uid);
+    get_block(dev, ip->i_block[0], buf);
     dp = (DIR *)buf;
-    while ((char *)dp < &buf[BLKSIZE])
+    cp = buf;
+    while (dp < buf + BLKSIZE)
     {
-        printf("name:%s,", dp->name);
+        printf("\n%d,name:",dp->name_len);
+        for (j=0; j < dp->name_len; j++){
+            printf("%c,",dp->name[j]);
+            printf("%d,",dp->inode);
+            //    name[j] = dp->name[j];
+        }
+        //printf("i_number: %d,dirname:%s,", dp->inode, name);
+        cp += dp->rec_len;
+        printf(",rec_len:%d",dp->rec_len);
+        dp = (DIR *)cp;
     }
     printf("\n");
 
     ls_file(ino);
 }
 
+int pwd(MINODE *wd)
+{
+    if (wd == root)
+        printf("/");
+    else
+        rpwd(wd);
+}
+
+int rpwd(MINODE *wd)
+{
+    INODE *ip;
+    if (wd == root)
+        return;
+    //from i_block[0] of wd->INODE
+    //Have not finished ....!!!!!!!!!!
+    ip = &wd->INODE;
+}
