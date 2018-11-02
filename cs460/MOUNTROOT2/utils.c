@@ -37,11 +37,19 @@ int tokenize(char *pathname)
 
 MINODE *iget(int dev, int ino)
 {
-}
 
+}
+/***
 int iput(MINODE *mip)
 {
+    mip->refCount--;
+    if (mip->refCount > 0)
+        return;
+    if (!mip->dirty)
+        return;
+    put_block(fd, mip->INODE.i_block, buf);
 }
+***/
 
 int search(MINODE *mip, char*name)
 {
@@ -78,9 +86,34 @@ int search(MINODE *mip, char*name)
 
 int getino(char *pathname)
 {
+    char buf[BLKSIZE];
+    char b1[BLKSIZE];
+    int i,k;
+    int me;
+    tokenize(pathname);
+    get_block(fd, iblk, buf);
+    ip = (INODE *)buf + 1;
+    i=0;
+    while(*pathname){
+        strcpy(name[i++], pathname);
+        pathname++;
+    }
+    k = i;
+    for (i=0; i<k; i++){
+        me = search(ip, name[i]);
+        if (me == 0){
+            printf("Can't find %s\n", name[i]);
+            return(0);
+        }
+        me--;
+        get_block(fd, iblk+(me/8), b1);
+        ip = (INODE *)b1 + (me % 8);
+    }
+    ip = (DIR *)ip->i_block[0];
+    return ip;
 
 }
-
+/**
 int findmyname(MINODE *parent, u32 myino, char *myname)
 {
 }
@@ -88,3 +121,4 @@ int findmyname(MINODE *parent, u32 myino, char *myname)
 int findino(MINODE *mip, u32 *myino)
 {
 }
+**/
