@@ -7,16 +7,11 @@ int main(int argc, char *argv)
     int i, j;
     char cmd[8];
     char cmdline[64];
-    i=0;
     while(1){
-        printf("argc=%d ", argc);
-        while(*argv != 0){
-            while(*argv != ' ')
-                cmdline[i*8+(j++)] = *argv++;
-            i++;
-        }
-        for (i=0; i<8; i++)
-            cmd[i] = cmdline[i];
+        ugetline(cmdline);
+        token(cmdline);
+        printf("cmdline!!!:", cmdline);
+        strcpy(cmd, cmdline);
         if (!strcmp(cmd, "exit"))
             uexit(0);
         pid = fork();

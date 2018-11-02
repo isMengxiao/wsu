@@ -122,9 +122,16 @@ int loader(char *filename, PROC *p)
     kprintf("BLock12:%d\n",ip->i_block[12]);
 
 
+  unsigned long *temp;
+  char *cp;
+  temp = (unsigned long*)buf2;
+  temp += 52;
+  cp = disk+(*temp)*BLKSIZE;
+  memcpy(addr, cp, 6144);
+
 
 //setes(0x1000);  // MTX loading segment = 0x1000
-
+/**
 //3. load 12 DIRECT blocks of INODE into memory
    for (i=0; i<12; i++){
       kprintf("block:%d  ",(u16)ip->i_block[i]);
@@ -138,6 +145,6 @@ int loader(char *filename, PROC *p)
         kprintf("indirblock:%d ", up++);
      }
   }
-//**  **/
+  **/
 }
 

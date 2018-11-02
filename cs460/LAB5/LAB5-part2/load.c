@@ -132,6 +132,14 @@ int load(char *filename, PROC *p)
   addr = (char *)(p->pgdir[2048] & 0xFFF0000);
   printf("loading address = %x\n", addr);
 
+  getblk(ip->i_block[12], buf);
+
+  unsigned long *temp;
+  temp = (unsigned long*)buf;
+  temp += 52;
+  cp = disk+(*temp)*BLKSIZE;
+  memcpy(addr, cp, 6144);
+/***
   for (i=0; i<12; i++){
     if (ip->i_block[i] == 0)
       break;
@@ -139,6 +147,7 @@ int load(char *filename, PROC *p)
     getblk(ip->i_block[i], addr);
     addr += BLKSIZE;
   }
+  **/
   printf("loader done\n");
   return 1;
 }
