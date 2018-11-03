@@ -8,17 +8,18 @@ int main(int argc, char *argv)
     char cmd[8];
     char cmdline[64];
     while(1){
+        printf("input a command : [u1|u2|exit]: ");
         ugetline(cmdline);
         token(cmdline);
-        printf("cmdline!!!:", cmdline);
         strcpy(cmd, cmdline);
+        //printf("cmdline!!!:%s\n", cmd);
         if (!strcmp(cmd, "exit"))
             uexit(0);
         pid = fork();
         if (pid)
             pid = wait(&status);
         else{
-            printf("!!!!sh cmdline: %s", cmdline);
+        //    printf("!!!!sh cmdline: %s\n", cmdline);
             exec(cmdline);
         }
     }

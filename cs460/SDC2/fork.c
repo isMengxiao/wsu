@@ -154,9 +154,9 @@ int fork()
   for (i=1; i <= 14; i++){
      p->kstack[SSIZE-i] = running->kstack[SSIZE-i];
   }
-  //for (i=15; i<=28; i++)
-  //  p->kstack[SSIZE-i] = 0;
-  //  printf("FIX UP child resume PC to %x\n", running->upc);
+  for (i=15; i<=28; i++)
+    p->kstack[SSIZE-i] = 0;
+    printf("FIX UP child resume PC to %x\n", running->upc);
   p->kstack[SSIZE - 14] = 0; // child return pid=0
   p->kstack[SSIZE-15] = (int)goUmode;
   p->ksp = &(p->kstack[SSIZE-28]);

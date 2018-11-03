@@ -111,6 +111,7 @@ int getino(char *pathname)
     }
     ip = (DIR *)ip->i_block[0];
     return ip;
+    //Not finished/
 
 }
 /**
