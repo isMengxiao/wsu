@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+<h2>Tasks</h2>
+<form action="{{ url_for('tasks') }}" method="post">
+    <div class="form-group">
+        <input class="form-control" type="text" name="taskid" placeholder="Which one do you like?(enter ID)">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="text" name="prefer" placeholder="Grade.(0-100)">
+    </div>
+    <button class="btn btn-default" type="submit">Post</button>
+</form>
+{% for task in tasks %}
+    <li class="tweet">
+        taskid: {{ task.taskid }},
+        taskname: {{ task.name   }},
+        limittime: {{ task.limittime }},
+        payback: {{ task.payback }}
+    </li>
+{% endfor %}
+{% endblock %}
