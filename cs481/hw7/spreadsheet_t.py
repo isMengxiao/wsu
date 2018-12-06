@@ -1,8 +1,8 @@
 #! /usr/bin/env python3.6
-from tkinter import Tk
+import tkinter as tk
 from spreadsheet import Spreadsheet
 
-root = Tk()
+root = tk()
 root.title("Spreadsheet Self-Test")
 nRows = 4
 nCols = 4

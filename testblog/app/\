@@ -1,3 +1,0 @@
-{% entends "base.html" %}
-{% block body %}
-{% endblock %}
