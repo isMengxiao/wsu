@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block body %}
+{% block page_content %}
 <h2>Task post</h2>
   <form action="{{ url_for('manager') }}" method="post">
     <div class="form-group">
@@ -12,7 +12,9 @@
         <input class="form-control" type="text" name="payback" placeholder="How much could this task pay?">
     </div>
     <button class="btn btn-default" type="submit">Post</button>
-    <a class="btn btn-default" href="{{ url_for('result') }}">Result</a>
+  </form>
+  <form action="{{ url_for('result') }}" method="get">
+    <button class="btn btn-default" type="submit">Result</button>
   </form>
   {% for post in timeline %}
     <li class="tweet">

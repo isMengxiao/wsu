@@ -38,8 +38,13 @@ def register():
         return redirect(url_for('manager'))
     else:
         return redirect(url_for('tasks'))
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
+def index():
+    return render_template('index.html')
+@app.route('/result', methods=['GET'])
+def result():
+    return render_template('result.html')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'GET':
@@ -61,12 +66,15 @@ def login():
     if user_position == 'manager':
         return redirect(url_for('manager'))
     else:
+        init_employee(user_id)
         return redirect(url_for('tasks'))
 
 def init_db():
     db = FlaskRedis(host='localhost', port='6378', db='0')
     db.init_app(app)
     return db
+
+def init_employee(user_id)
 
 @app.before_request
 def before_request():
