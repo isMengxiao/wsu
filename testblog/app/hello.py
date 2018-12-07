@@ -7,6 +7,7 @@ from flask import render_template
 from flask_bootstrap import Bootstrap
 from flask import request, url_for, session, g, redirect
 from flask_redis import FlaskRedis
+from calculate import calculate
 
 app = Flask(__name__)
 bootstrap = Bootstrap()
@@ -33,6 +34,8 @@ def register():
         position=position
     ))
     g.db.hset('users', username, user_id)
+    if position == 'employee':
+        g.db.hset('employees', username, user_id)
     session['username'] = username
     if position == 'manager':
         return redirect(url_for('manager'))
@@ -41,9 +44,17 @@ def register():
 @app.route('/')
 def index():
     return render_template('index.html')
+
 @app.route('/result', methods=['GET'])
 def result():
+    tasklist = _tasklist()
+    tasks = []
+    for task in tasklist:
+        taskpreferlist = g.db.hgetall('taskprefer'+task['taskid'])
+        tasks.append(calculate(taskpreferlist))
+
     return render_template('result.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -74,7 +85,11 @@ def init_db():
     db.init_app(app)
     return db
 
-def init_employee(user_id)
+def init_employee(user_id):
+    tasks = _tasklist()
+    for task in tasks:
+        g.db.hmset('employee:'+user_id, dict(task_id=task['taskid'],
+                                             prefer=50))
 
 @app.before_request
 def before_request():
@@ -99,7 +114,11 @@ def manager():
                                        taskname=taskname,
                                        limittime=limittime,
                                        payback=payback))
-    g.db.lpush('tasklit', str(task_id))
+    employees = g.db.lrange('employees', 0, -1)
+    for i in _tasklist():
+        for j in employees:
+            g.db.hmset('taskprefer:'+task_id, dict(user_id=j['user_id'], prefer=50))
+    g.db.lpush('tasklist', str(task_id))
     g.db.lpush('tasks:' + str(user_id), str(task_id))
     g.db.lpush('timeline:' + str(user_id), str(task_id))
     g.db.ltrim('timeline:' + str(user_id), 0, 100)
@@ -119,8 +138,11 @@ def tasks():
 
     taskid = request.form['taskid']
     prefer = request.form['prefer']
-    g.db.hmset('task' + str(taskid) + '_prefer:',
-               dict(user_id=user_id, prefer=prefer))
+    print('employee user_id',user_id)
+    g.db.hmset('employee:'+str(user_id),
+               dict(task_id=taskid, prefer=prefer))
+    g.db.hmset('taskprefer'+str(taskid),
+               dict(task_id=taskid, prefer=prefer))
 
     return render_template('tasks.html', tasks=_tasklist())
 

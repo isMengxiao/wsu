@@ -1,11 +1,33 @@
-import tkinter as tk
+from tkinter import *
 import math
-import re
-from collections import ChainMap
+from dependencies import dependersOn
 
-class Cell(Label):
-	def __init__(self, name=None, row=0, col=0):
-        self.row
+class Cell():
+    def __init__(self, name, row, col, expr='', parent= None):
+        self.row = row
+        self.col = col
+        self.name = name
+        self.expr = expr
+        self.parent = parent
+
+        entry = self.grid = Entry(self.parent)
+        entry.bind('<Up>')
+        entry.bind('<Down>')
+        entry.bind('<Left>')
+        entry.bind('<Right>')
+
+    def __str__(self):
+        value = spreadsheet.symbol_table[self.name]
+        return 'name:%s, expr: %s, avlue: %d' %(self.name, self.expr, value)
+
+    def update(self):
+        value = spreadsheet.symbol_table[self.name]
+        if value.__name__ == 'function':
+            self.grid['text'] = self.expr
+        elif value is None:
+            self.grid['text'] = ''
+        else:
+            self.grid['text'] = str(value)
 
 class Spreadsheet(Frame):
     def __init__(self, parent, rows=4, cols=4):
@@ -14,96 +36,73 @@ class Spreadsheet(Frame):
         self.rows = rows
         self.cols = cols
         self.cells = []
-        self.cellsName = {}
+        self.cellsName = []
+        self.symbol_table = {}
+        self.deps = {}
 
+        self.Create_widgets()
         self.focusCell = self.cells[0]
         self.focusEntry = Entry(self.parent)
+        print('name',self.cells[0].name)
         self.focusLabel = Label(self.parent, self.cells[0].name+': ')
-
         self.focusEntry.focus()
 
+
     def Create_widgets(self):
-        self.frame = tk.Frame(self)
-        self.frame.pack(side='top')
+        rowlabel = 'abcdefghijklmnopqrstuvwxyz'
+        for col in range(self.cols):
+            label = Label(self)
+            label['text'] = int(col)
+            label.grid(row=0, column=col+1)
+        for row in range(self.rows):
+            label = Label(self)
+            print(row)
+            label['text'] = rowlabel[row]
+            label.grid(row=row+1, column=0)
+        for col in range(self.cols):
+            for row in range(self.rows):
+                name=rowlabel[row] + str(col)
+                cell = Cell(self, name, row, col, parent=self.parent)
+                self.cells.append(cell)
+                #cell.grid(row=row+1, column=col+1)
+                self.cellsName.append(name)
+                self.symbol_table[cell.name] = ''
+                self.deps[cell] = set()
 
-        blank = tk.Label(self.frame)
-        blank.grid(row=0, column=0)
 
-        for i in range(self.cols):
-            label = tk.Label(self.frame, text=chr(ord('A')+i))
-            label.grid(row=0, column=i+1)
+    def update(self, cell, expr):
+        """
+        pre_expr = cell.expr
+        pre_value = self.symbol_table[cell.name]
+        pre_code = cell.code
+        pre_deps = self.deps[cell]
+        """
+        cell.expr = expr
+        newcode = compile(expr, cell.name, 'eval')
+        self.symbol_table[cell.name] = eval(newcode, {}, self.symbol_table)
+        cell.update()
+        for row in self.rows:
+            for col in self.cols:
+                cell = self.cells[col][row]
+                self.deps[cell] = (dependersOn(cell.name, deps))
+        for acell in dependersOn(cell, self.deps):
+            self.symbol_table[acell.name] = eval(acell.expr, {}, self.symbol_table)
+            acell.update()
 
-        for j in range(self.rows):
-            label = tk.Label(self.frame, text=str(i + 1))
-            label.grid(row=i+1, column=0)
-            for k in range(self.cols):
-                cells = cell(j, k, self.workcell, self.size, self.frame)
-                self.workcell[cell.name] = cells
-                cells.grid.grid(row=i+1, column=j+1)
+    def focuschange(self, cell):
+        self.focusCell['background'] = 'white'
+        self.focusCell = cell
+        self.focusCell['background'] = 'yellow'
+        self.focusLabel['text'] = cell.name
+        self.focusEntry.delete(0, End)
+        self.focusEntry.insert(End, cell.expr)
 
 
-class cell():
-    def __init__(self, i, j, bros, size, parent):
-        self.rown = i
-        self.coln = j
-        self.bros = bros
-        self.name = self.getname(i, j)
-        self.calculation = '0'
-        self.data = 0
-        self.size = size
-        self.dep = set()
-        self.req = set()
+    def __str__(self):
+        result = ''
+        for cell in self.cells:
+            result += str(cell) + ',\n'
+        return result
 
-        self.var = tk.StringVar()
-        entry = self.grid = tk.Entry(parent, textvarialbe=self.var,
-                                     justify='right')
-        entry.bind('<FocusIn>', self.edit)
-        entry.bind('<FocusOut>', self.update)
-        entry.bind('<Return>', self.update)
-        entry.bind('<Up>', self.move(-1, 0))
-        entry.bind('<Down>', self.move(1, 0))
-        entry.bind('<Left>', self.move(0, -1))
-        entry.bind('<Right>', self.move(0, 1))
-
-        self.var.set(self.data)
-
-    def move(self, row, col):
-        movetoR = (self.rown + row) % self.size
-        movetoC = (self.coln + col) % self.size
-
-        def changetarge(event):
-            grid = self.vros[self.getname(movetoR, movetoC)].grid
-            grid.changetarge()
-
-        return changetarge
-
-    def calculate(self):
-        current = set(cell.re.findall(self.calculation))
-
-        for i in current - self.req:
-            self.bros[i].dep.add(self.name)
-        for i in self.req - current:
-            self.bros[i].dep.remove(self.name)
-
-        reqvalue = {i: self.bros[i].value for i in current}
-        env = ChainMap(math.__dict__, reqvalue)
-        self.data = eval(self.calculation, {}, env)
-
-        self.req = current
-        self.var.set(self.data)
-
-    def propagate(self):
-        for i in self.deps:
-            self.bros[i].calculate()
-            self.bors[i].propagate()
-
-    def edit(self, event):
-        self.var.set(self.calculation)
-        self.grid.select_range(0, tk.END)
-
-    def update(self, event):
-        self.calculation = self.var.get()
-        self.calculate()
-        self.propagate()
-        if hasattr(event, 'keysym') and event.keysym == "Return":
-            self.var.set(self.formula)
+if __name__ == '__main__':
+    print('helloworld')
