@@ -7,7 +7,6 @@ from flask import render_template
 from flask_bootstrap import Bootstrap
 from flask import request, url_for, session, g, redirect
 from flask_redis import FlaskRedis
-from calculate import calculate
 
 app = Flask(__name__)
 bootstrap = Bootstrap()
@@ -48,12 +47,14 @@ def index():
 @app.route('/result', methods=['GET'])
 def result():
     tasklist = _tasklist()
-    tasks = []
+    winners = []
     for task in tasklist:
         taskpreferlist = g.db.hgetall('taskprefer'+task['taskid'])
-        tasks.append(calculate(taskpreferlist))
+        #winners[task['taskid']] = calculate(taskpreferlist)
+        winners.append(dict(task_id=task['taskid'],
+                            name=calculate(taskpreferlist)))
 
-    return render_template('result.html')
+    return render_template('result.html', winners=winners)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -114,10 +115,6 @@ def manager():
                                        taskname=taskname,
                                        limittime=limittime,
                                        payback=payback))
-    employees = g.db.lrange('employees', 0, -1)
-    for i in _tasklist():
-        for j in employees:
-            g.db.hmset('taskprefer:'+task_id, dict(user_id=j['user_id'], prefer=50))
     g.db.lpush('tasklist', str(task_id))
     g.db.lpush('tasks:' + str(user_id), str(task_id))
     g.db.lpush('timeline:' + str(user_id), str(task_id))
@@ -138,11 +135,11 @@ def tasks():
 
     taskid = request.form['taskid']
     prefer = request.form['prefer']
-    print('employee user_id',user_id)
+    print('employee user_id', user_id)
     g.db.hmset('employee:'+str(user_id),
                dict(task_id=taskid, prefer=prefer))
-    g.db.hmset('taskprefer'+str(taskid),
-               dict(task_id=taskid, prefer=prefer))
+    g.db.hset('taskprefer'+str(taskid),
+               user_id, prefer)
 
     return render_template('tasks.html', tasks=_tasklist())
 
@@ -177,6 +174,27 @@ def _tasklist():
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
+def calculate(task):
+    '''
+        calculate the prefer of each employees for every tasks
+    '''
+    employeelist = g.db.hgetall('employees')
+    prefer = {}
+    print('employeelist', employeelist)
+    for em_id in employeelist:
+        ids = employeelist[em_id]
+        prefer[em_id.decode('utf-8')] = int(task[ids].decode('utf-8'))
+    winner = ''
+    win_score = 0
+    for i in prefer:
+        if prefer[i] > win_score:
+            win_score = prefer[i]
+            winner = i
+
+    return winner
+
+
 
 if __name__ == "__main__":
     app.run()

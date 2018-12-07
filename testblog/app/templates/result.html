@@ -1,4 +1,10 @@
 {% extends "base.html" %}
 {% block page_content %}
 <h2>Result</h2>
+{% for winner in winners %}
+    <li class="tweet">
+        {{ winner.task_id }}'s winner is: 
+        {{ winner.name}}
+    </li>
+{% endfor %}
 {% endblock %}
