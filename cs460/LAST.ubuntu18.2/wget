@@ -1,0 +1,13 @@
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/crt0.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/eoslib
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/mk
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/mku
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/sdimage
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/t.bin
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/test.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/u.ld
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/ucode.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/uio.c
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/us.s
+wget https://www.eecs.wsu.edu/~cs460/samples/LAST.ubuntu18/wanix
+wget https://www.eecs.wsu.edu/~cs460/LAST.ubuntu18.html
