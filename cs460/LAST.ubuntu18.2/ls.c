@@ -2,7 +2,6 @@ char *t1 = "xwrxwrxwr-------";
 char *t2 = "----------------";
 struct STAT mystat, *sp;
 int ls_file(char *fname)
-    // list a single file
 {
     struct STAT fstat, *sp = &fstat;
     int r, i;
@@ -23,18 +22,18 @@ int ls_file(char *fname)
             printf("%c", t2[i]); // print permission bit as -
     }
     printf("%4d ", sp->st_nlink); // link count
-    printf("%4d ", sp->st_uid // uid
-            printf("%8d ", sp->st_size); // file size
-            strcpy(ftime, ctime(&sp->st_ctime));
-            ftime[strlen(ftime)-1] = 0; // kill \n at end
-            printf("%s ",ftime); // time in calendar form
-            printf("%s", basename(fname)); // file basename
-            if (S_ISLNK(sp->st_mode)){ // if symbolic link
-            r = readlink(fname, sbuf, 4096);
-            printf(" -> %s", sbuf);
-            }
-            printf("\n");
-            }
+    printf("%4d ", sp->st_uid); // uid
+    printf("%8d ", sp->st_size); // file size
+    strcpy(ftime, ctime(&sp->st_ctime));
+    ftime[strlen(ftime)-1] = 0; // kill \n at end
+    printf("%s ",ftime); // time in calendar form
+    printf("%s", basename(fname)); // file basename
+    if (S_ISLNK(sp->st_mode)){ // if symbolic link
+        r = readlink(fname, sbuf, 4096);
+        printf(" -> %s", sbuf);
+    }
+    printf("\n");
+}
 int ls_dir(char *dname)
 {
     char name[256];
@@ -75,4 +74,15 @@ int main(int argc, char *argv[])
         ls_dir(filename);
     else
         ls_file(filename);
+}
+
+int S_ISDIR(char mode)
+{
+    int s=0;
+    s = (mode >> 4) & 1111;
+    if (s = 0b0100)
+        return 1;
+    else
+        return 0;
+
 }
