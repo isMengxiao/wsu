@@ -548,13 +548,14 @@ int readline(int fd, char* str)
     char *cp = str;
     int r;
 
-    r = read(fd, &c, 1)
+    r = read(fd, &c, 1);
 
     while (r && (c != EOF) && (c != '\r') && (c != '\n')){
         *cp++ = c;
         r = read(fd, &c, 1);
     }
     if (c==EOF) return 0;
+    if (!r) return 0;
 
     *cp++ = c;         // a string with last char=\n or \r
     *cp = 0;

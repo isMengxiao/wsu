@@ -9,7 +9,7 @@ arm-none-eabi-ld -T u.ld us.o $1.o eoslib -Ttext=0x80000000 -o $1
 
 mount -o loop sdimage /mnt
 cp -av $1 /mnt/bin
-#ls -l /mnt/bin
+ls -l /mnt/bin
 umount /mnt
 
 rm $1 *.o

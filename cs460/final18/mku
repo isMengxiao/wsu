@@ -7,7 +7,7 @@ arm-none-eabi-gcc -c -mcpu=arm926ej-s -o $1.o $1.c #2> /dev/null
 
 arm-none-eabi-ld -T u.ld us.o $1.o mtxlib $LDLIB -Ttext=0x80000000 -o $1
 
-mount -o loop ./sdimage /mnt
+mount -o loop ../sdimage /mnt
 cp -av $1 /mnt/bin
 #ls -l /mnt/bin
 umount /mnt

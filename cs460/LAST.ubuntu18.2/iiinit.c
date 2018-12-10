@@ -3,6 +3,7 @@
 int console;
 int uart1;
 int uart2;
+
 int parent()// P1's code
 {
     int pid, status;
@@ -19,7 +20,7 @@ int parent()// P1's code
                 exec("login /dev/tty0"); // new console login process
         }
         if (pid==uart1){
-            printf("INIT: forks a new uart1 login!!!!!!!!!!!!!!\n");
+            printf("INIT: forks a new uart1 login\n");
             uart1 = fork();
             if (uart1)
                 continue;
@@ -27,9 +28,9 @@ int parent()// P1's code
                 exec("login /dev/ttyS0");
         }
         if (pid==uart2){
-            printf("INIT: forks a new uart2 login\n!!!!!!!!!!!!!!!!!!!!!!!!");
+            printf("INIT: forks a new uart2 login\n");
             uart2 = fork();
-            if (uart1)
+            if (uart2)
                 continue;
             else
                 exec("login /dev/ttyS1");
@@ -43,32 +44,24 @@ main()
     in= open("/dev/tty0", O_RDONLY); // file descriptor 0
     out = open("/dev/tty0", O_WRONLY); // for display to console
     printf("INIT : fork a login proc on console\n");
-    fork_uart1();
-    fork_uart2();
     console = fork();
+    another_fork();
     if (console) // parent
         parent();
     else
+        // child: exec to login on tty0
         exec("login /dev/tty0");
 }
-int fork_uart1()
+int another_fork()
 {
     int in1, out1;
-    in1  = open("/dev/ttyS0", O_RDONLY); // file descriptor 0
-    out1 = open("/dev/ttyS0", O_WRONLY); // for display to console
-    printf("INIT : fork a login proc on uart1\n");
-    uart1 = fork();
-    if (!uart1)
-        exec("login /dev/ttyS0");
-}
-int fork_uart2()
-{
     int in2, out2;
-    in2  = open("/dev/ttyS1", O_RDONLY); // file descriptor 0
-    out2 = open("/dev/ttyS1", O_WRONLY); // for display to console
-    printf("INIT : fork a login proc on uart2\n");
+    in1  = open("/dev/ttyS0", O_RDONLY);
+    in2  = open("/dev/ttyS1", O_RDONLY);
+    out1 = open("/dev/ttyS0", O_WRONLY);
+    out2 = open("/dev/ttyS1", O_WRONLY);
+    printf("INIT : fork login process on 2 UARTS");
+    uart1 = fork();
     uart2 = fork();
-    if (!uart2)
-        exec("login /dev/ttyS1");
-}
 
+}
