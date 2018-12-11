@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+The PBDS system
+>>> print("I am PBDS")
+I am PBDS
+"""
 
 from datetime import datetime
 
@@ -18,10 +23,10 @@ app.secret_key = SECRET_KEY
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    '''
+    """
     For register.html.
     For two different types of user: managers & employees.
-    '''
+    """
     error = None
     if request.method == 'GET':
         return render_template('register.html', error=error)
@@ -50,9 +55,9 @@ def index():
 
 @app.route('/result', methods=['GET'])
 def result():
-    '''
+    """
     Let managers can see results.
-    '''
+    """
     tasklist = _tasklist()
     winners = []
     for task in tasklist:
@@ -65,9 +70,9 @@ def result():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    '''
+    """
     For login
-    '''
+    """
     error = None
     if request.method == 'GET':
         return render_template('login.html', error=error)
@@ -97,6 +102,9 @@ def init_db():
     return db
 
 def init_employee(user_id):
+    """
+    Init employees' form.
+    """
     tasks = _tasklist()
     for task in tasks:
         g.db.hmset('employee:'+user_id, dict(task_id=task['taskid'],
@@ -108,9 +116,9 @@ def before_request():
 
 @app.route('/manager', methods=['GET', 'POST'])
 def manager():
-    '''
+    """
     For managers distributing tasks
-    '''
+    """
     if not session:
         return redirect(url_for('login'))
     user_id = g.db.hget('users', session['username'])
@@ -137,9 +145,9 @@ def manager():
 
 @app.route('/tasks', methods=['GET', 'POST'])
 def tasks():
-    '''
+    """
     For employees seeing tasks.
-    '''
+    """
     if not session:
         return redirect(url_for('login'))
     user_id = g.db.hget('users', session['username'])
@@ -160,9 +168,9 @@ def tasks():
     return render_template('tasks.html', tasks=_tasklist())
 
 def _get_timeline(user_id):
-    '''
+    """
     Get tasks by its distributing time
-    '''
+    """
     tasks = g.db.lrange('timeline:' + str(user_id), 0, -1)
     timeline = []
     for task_id in tasks:
@@ -175,9 +183,9 @@ def _get_timeline(user_id):
     return timeline
 
 def _tasklist():
-    '''
+    """
     Get all the tasks by tasklist
-    '''
+    """
     tasklist = g.db.lrange('tasklist', 0, -1)
     print('tasklist', tasklist)
     tasks = []
@@ -198,9 +206,9 @@ def logout():
     return redirect(url_for('login'))
 
 def calculate(task):
-    '''
-        calculate the prefer of each employees for every tasks
-    '''
+    """
+    calculate the prefer of each employees for every tasks
+    """
     employeelist = g.db.hgetall('employees')
     prefer = {}
     print('employeelist', employeelist)
