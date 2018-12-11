@@ -1,6 +1,7 @@
 #include "ucode.c"
 
-#define rows 20
+#define rows 10
+#define line 80
 
 int main(int argc, char* argv[])
 {
@@ -13,12 +14,16 @@ int main(int argc, char* argv[])
     while(i<rows)
     {
         readline(fd, str);
-        printf("%s.%d", str, i);
+        if (!*str)
+            break;
+        printf("%s.%d", str, i++);
     }
     while(readline(fd, str))
     {
+        if (str > 80)
         printf("%s", str);
         getc();
+        printf("next");
     }
 
 }

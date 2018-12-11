@@ -4,39 +4,28 @@ char str[1280];
 char cmd1[128];
 char cmd2[128];
 
-main()
+main(int argc, char* argv[])
 {
-    char cmd[128];
+    char command;
     int i=0;
     while(1)
     {
-        printf("start sh");
-        printf("Command:");
-        gets(cmd1);
-        if (1)
+        if (argc <= 2)
         {
-            printf("single cmd");
-            printf("result:%d", strcmp(cmd1, "exit"));
-            if (!strcmp(cmd1, "exit"))
+            command = argv[1];
+            if (!strcmp(command, "exit") || !strcmp(command, "cd"))
             {
-                printf("easy cmd");
-                exec(0);
-                return 0;
+                exec(command);
             }
-            printf("run");
-            singlecmd(cmd1);
+            singlecmd(command);
         }
         else
         {
-            printf("complex cmd");
-            /**
             if (argc == 4){
                 strcpy(cmd1, argv[1]);
                 strcpy(cmd1, argv[2]);
                 strcpy(cmd2, argv[4]);
-                do_pipe(cmd1, cmd2);
             }
-            **/
         }
     }
 }
@@ -46,7 +35,6 @@ void singlecmd(char* command)
     int status;
     int pid = fork();
 
-    printf("do run");
     if (pid == 0)
         exec(command);
     else
