@@ -1,6 +1,0 @@
-setup.py
-PBDS/__init__.py
-PBDS.egg-info/PKG-INFO
-PBDS.egg-info/SOURCES.txt
-PBDS.egg-info/dependency_links.txt
-PBDS.egg-info/top_level.txt
