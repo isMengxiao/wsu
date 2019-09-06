@@ -1,0 +1,21 @@
+---
+title: "CptS575 Hw2"
+author: "Mengxiao"
+output: pdf_document
+---
+
+# Hello world
+
+## Part 1
+### a. Read the data into R
+
+```{r}
+data = read.csv('https://scads.eecs.wsu.edu/wp-content/upload/2017/09/College.csv')
+data
+```
+
+### b. Find the median cost of books
+
+```{r}
+books_median = median(data['Books'][, 1])
+```
