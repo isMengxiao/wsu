@@ -10,12 +10,36 @@ output: pdf_document
 ### a. Read the data into R
 
 ```{r}
-data = read.csv('https://scads.eecs.wsu.edu/wp-content/upload/2017/09/College.csv')
-data
+data = read.csv('https://scads.eecs.wsu.edu/wp-content/uploads/2017/09/College.csv')
 ```
 
 ### b. Find the median cost of books
 
 ```{r}
 books_median = median(data['Books'][, 1])
+books_median
 ```
+
+### c. Produce a scatterplot to show the relationship between the cost of books and Top 10 percent students.
+
+```{r}
+plot(x = data$Books,
+     y = data$Top10perc,
+     xlab = "Cost of books",
+     ylab = "Top 10 percent",
+     main = "Relationship between cost of books and top 10 percent"
+     )
+```
+
+### d. Produce a histogram showing the overall enrollment numbers for both public and private schools.
+
+
+### e. Seperate the schools to two parts, top and ntop(not top)
+```{r}
+top <- sum(data[data$Top25perc>50,]$Accept)/sum(data[data$Top25perc>50,]$Apps)
+ntop<- sum(data[data$Top25perc<=50,]$Accept)/sum(data[data$Top25perc<=50,]$Apps)
+barplot(matrix(c(top, ntop)), ylab="Acceptance rate", xlab="School", col=c("aquamarine3", "coral"),
+    main="The Acceptance rate of top and not top schools", beside=TRUE, width=0.2)
+legend("topleft", legend=c("TOP","NTOP"), fill=c("aquamarine3", "coral"))
+```
+
