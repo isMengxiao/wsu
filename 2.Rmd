@@ -1,0 +1,211 @@
+---
+title: "HW2"
+author: "Shaoyang Yu"
+date: "2019/9/8"
+output: pdf_document
+---
+
+• Private : Public/private indicator
+• Apps : Number of applications received
+• Accept : Number of applicants accepted
+• Enroll : Number of new students enrolled
+• Top10perc : New students from top 10% of high school class
+• Top25perc : New students from top 25% of high school class
+• F.Undergrad : Number of full-time undergraduates
+• P.Undergrad : Number of part-time undergraduates
+• Outstate : Out-of-state tuition
+• Room.Board : Room and board costs
+• Books : Estimated book costs
+• Personal : Estimated personal spending
+• PhD : Percent of faculty with Ph.D.’s
+• Terminal : Percent of faculty with terminal degree
+• S.F.Ratio : Student/faculty ratio
+• perc.alumni : Percent of alumni who donate
+• Expend : Instructional expenditure per student
+• Grad.Rate : Graduation rate
+
+(a). Use the read.csv() function to read the data into R, or the csv library to read in the
+data with python. In R you will load the data into a dataframe. In python you may store it as a list
+of lists or use the pandas dataframe. Call the loaded data college. Ensure that your column
+headers are not treated as a row of data.
+```{r}
+data1<-read.csv('F:/2019 Fall data science/College.csv')
+print(data1)
+
+```
+
+(b). Find the median cost of books for all schools in this dataset.
+```{r warning=TRUE}
+median(data1$Books)
+```
+
+(c). Produce a scatterplot that shows a relationship between two features of your choice in the dataset. Ensure it has appropriate axis labels and a title.
+```{r}
+library(ggplot2)
+ggplot(data1, aes(x=Private, y=F.Undergrad)) + geom_point(size=4,shape=21)
+```
+
+(d). Produce a histogram showing the overall enrollment numbers (P.Undergrad plus
+F.Undergrad) for both public and private (Private) schools. Ensure it has appropriate axis labels and a title.
+```{r}
+library(ggplot2)
+ggplot(data1, aes(x = Private, y = P.Undergrad + F.Undergrad )) + geom_histogram(stat = 'identity', position = 'dodge',fill = 'lightblue', width = 0.5)
+```
+
+(e).Create a new qualitative variable, called Top, by binning the Top25perc variable into two categories. Specifically, divide the schools into two groups based on whether or not the proportion of students coming from the top 25% of their high school classes exceeds 50%.
+```{r}
+data1$Top<-data1$Top25perc > 50
+```
+
+
+(f). Continue exploring the data, producing two or more new plots of any type, and provide a brief summary of your hypotheses and what you discover. 
+I explored the relationship between the graduation rates of full-time and part-time students compared to public and private schools.And my guess is that public universities have higher graduation rates.
+
+This is the graduation rate of full-time students from public and private universities
+```{r}
+library(ggplot2)
+ggplot(data1,aes(x=Grad.Rate, y=F.Undergrad, fill=Private))+geom_bar(stat='identity',position="dodge")
+```
+
+This is the graduation rate of part-time students from public and private universities
+```{r}
+library(ggplot2)
+ggplot(data1,aes(x=Grad.Rate, y=P.Undergrad, fill=Private))+geom_bar(stat='identity',position="dodge")
+```
+
+Conclusion: For full-time students, we can see from the graph that the graduation rate of public universities is significantly higher than that of private universities,On the contrary, for part-time students, we can see from the graph that the graduation rate of public universities is slightly higher than that of private universities. But according to these two charts, the graduation rate of public schools is higher than that of private schools in general.
+
+2.
+```{r}
+Auto<-read.csv('F:/2019 Fall data science/Auto.csv')
+```
+
+We need to remove the data row that include the symbol of "?".
+```{r}
+Auto<-Auto[Auto$horsepower !='?',]
+```
+
+a) Specify which of the predictors are quantitative, and which are qualitative?
+
+Use sapply() function, we obtain the data type. I think we should adjust the types of "origin". "origin" is more like a code name to represent this type of car, So I think it belongs to factor.However, the type of horsepower should be change to integer.
+Hence, we draw the conclusion that "mpg", "cylinders", "displayment", "horsepower", "weight", "acceleration", "year" are quantitative varibles. "origin", "name" are qualitative varibles.
+
+Change the data tpye of "origin" 
+```{r include=FALSE}
+#Change the data tpye of "origin", integer convert to factor.
+Auto$origin <- factor(Auto$origin, levels = 1:3, labels = c("A", "B", "C"))
+```
+Change the data tpye of "horsepower"
+```{r}
+#Change the data tpye of "origin", factor convert to integer.
+Auto$horsepower <-as.integer(as.character(Auto$horsepower))
+```
+Check the class of each attribute.
+```{r}
+sapply(Auto, class)
+```
+
+b) What is the range, mean and standard deviation of each quantitative predictor?
+Range value for each quantitative varible.
+```{r}
+#range
+range(Auto["mpg"])
+range(Auto["cylinders"])
+range(Auto["displacement"])
+range(Auto$horsepower)
+range(Auto["weight"])
+range(Auto["acceleration"])
+range(Auto["year"])
+```
+Mean value for each quantitative varible.
+```{r}
+#mean
+mean(Auto$mpg)
+mean(Auto$cylinders)
+mean(Auto$displacement)
+mean(Auto$horsepower)
+mean(Auto$weight)
+mean(Auto$acceleration)
+mean(Auto$year)
+```
+Standard deviation value for each quantitative varible.
+```{r}
+#Standard deviation
+sd(Auto$mpg)
+sd(Auto$cylinders)
+sd(Auto$displacement)
+sd(Auto$horsepower)
+sd(Auto$weight)
+sd(Auto$acceleration)
+sd(Auto$year)
+```
+(c)Now remove the 45th through 85th (inclusive) observations from the dataset.
+```{r}
+quantative <- sapply(Auto, is.numeric)  
+```
+remove 45th through 85th.
+```{r}
+Auto_new_quantative<- sapply(Auto[-45:-85, quantative], function(x) round(c(range(x), mean(x), sd(x)), 2))#remove 45th through 85th. 
+rownames(Auto_new_quantative) <- c("min", "max", "mean", "sd")#the name of each row.
+Auto_new_quantative  
+```
+
+d)Select two variables, horsepower and weight, to draw a scatter diagram.
+```{r}
+library(ggplot2)
+qplot(weight,horsepower,data=Auto)
+```
+In general, with the increase of the weight of the car, the horsepower of the car also presents a positive correlation, which also increases.
+
+Select two variables, horsepower and weight, to draw a scatter diagram.
+```{r}
+library(ggplot2)
+qplot(mpg,cylinders,data=Auto,geom=c("point","smooth"),span=0.2)
+```
+We can see that the number of cylinders can affects MPG. The smaller the number of cylinders, the higher the MPG and vice versa.
+
+
+e) Suppose that we wish to predict gas mileage (mpg) on the basis of the other variables. Which, if any, of the other variables might be useful in predicting mpg? Justify your answer.
+
+The relationship between weight and mpg.
+```{r}
+library(ggplot2)
+qplot(weight,mpg,data=Auto)#The relationship between weight and mpg.
+```
+
+The relationship between cylinders and mpg.
+```{r}
+library(ggplot2)
+qplot(cylinders,mpg,data=Auto)#The relationship between cylinders and mpg.
+```
+
+The relationship between horsepower and mpg.
+```{r}
+library(ggplot2)
+qplot(horsepower,mpg,data=Auto)#The relationship between horsepower and mpg.
+```
+
+The relationship between displacement and mpg.
+```{r}
+library(ggplot2)
+qplot(displacement,mpg,data=Auto)#The relationship between displacement and mpg.
+```
+
+The relationship between acceleration and mpg.
+```{r}
+library(ggplot2)
+qplot(acceleration,mpg,data=Auto)#The relationship between acceleration and mpg.
+```
+
+The relationship between origin and mpg.
+```{r}
+library(ggplot2)
+qplot(origin,mpg,data=Auto)#The relationship between origin and mpg.
+```
+
+The relationship between year and mpg.
+```{r}
+library(ggplot2)
+qplot(year,mpg,data=Auto)#The relationship between year and mpg.
+```
+According to the scatter graph, we can know year, origin, horsepower,cylinder are good reference to predict mpg.
