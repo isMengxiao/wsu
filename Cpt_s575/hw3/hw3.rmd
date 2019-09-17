@@ -1,0 +1,94 @@
+---
+title: "Cpts575 Hw3"
+author: "Mengxiao"
+output: pdf_document
+---
+# Part 1
+```{r}
+library(dplyr)
+#msleep = read.csv('https://scads.eecs.wsu.edu/wp-content/uploads/2017/10/msleep_ggplot2.csv')
+msleep = read.csv('msleep_ggplot2.csv')
+#heads = head(select(msleep, contains('sleep')))
+msleep %>%
+    select(contains('sleep'))%>%
+    head()
+```
+## a.
+```{r}
+#count_numbers = count(filter(msleep, bodywt<50, sleep_total>16))
+msleep %>%
+    filter(bodywt<50, sleep_total>16) %>%
+    count()
+```
+## b.
+```{r}
+msleep %>%
+    select(name, sleep_total, bodywt) %>%
+    arrange(desc=msleep$sleep_total) %>%
+    top_n(5)
+```
+## c.
+```{r, results="hide"}
+msleep = msleep %>%
+    mutate(wt_ratio=brainwt/bodywt,
+           rem_ratio=sleep_rem/sleep_total)
+```
+## d.
+```{r}
+order_sum = data.frame(
+    msleep %>%
+        group_by(order)%>%
+        summarise(avg=mean(sleep_total),
+                  max=max(sleep_total),
+                  min=min(sleep_total))
+    )
+order_sum
+```
+## e.
+```{r}
+#mutate(msleep, avg_ratio=order_sum[order_sum$order == order,]$avg)
+head(msleep)
+msleep_copy2 = data.frame(
+    msleep %>%
+        group_by(order) %>%
+        mutate(brainwt)
+                          )
+```
+
+
+
+# Part 2
+```{r}
+library(tidyr)
+head(who)
+```
+```{r}
+mywho = who %>%
+    gather(key, value, new_sp_m014:newrel_f65, na.rm = TRUE) %>%
+    mutate(key = stringr::str_replace(key, "newrel", "new_rel")) %>%
+    separate(key, c("new", "var", "sexage")) %>%
+    select(-new, -iso2, -iso3) %>%
+    separate(sexage, c("sex", "age"), sep = 1)
+head(mywho)
+```
+## a.
+This line tries to replace all the strings name "newrel" to "new_rel". So it tidy the key name of the data.
+If I skip this line, we will have one more key called "newrel" and it's data cannot be select when we use the key "new_rel".
+
+
+## b.
+```{r}
+removed  = count(gather(mywho)) - count(gather(mywho, na.rm=1))
+removed
+```
+
+## c.
+1. Explicit missing value means the data is 'NA', 'NAN' or some other Null value.
+2. Implicit missing value means the data is just doesn't apear on the table.
+
+## d.
+```{r}
+mywho2 = mywho %>%
+    select(country, year, var, sex, age)
+filter(mywho2, var != 'sp')
+```
