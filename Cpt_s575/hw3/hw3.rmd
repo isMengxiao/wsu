@@ -116,11 +116,16 @@ I want to know whether the cases decrease with the development of the modern med
 
 ## g.
 ```{r}
-siteDemo <- data.frame(U30.F = c(32, 1, 6, 17),
+siteDemo <- data.frame(Site = c("facebook", "myspace", "snapchat", "twitter"),
+                       U30.F = c(32, 1, 6, 17),
                        U30.M = c(31, 5, 4, 23),
                        O30.F = c(60, 3, 3, 12),
                        O30.M = c(58, 6, 2, 17))
-row.names(siteDemo) <- c("facebook", "myspcace", "snapchat", "twitter")
-siteDemo
+siteDemo_new <- siteDemo %>%
+    gather('U30.F', 'U30.M', 'O30.F', 'O30.M', key="AGG", value = "Count")
+siteDemo_new
+siteDemo_new <- siteDemo_new %>%
+    separate('AGG', into = c("AgeGroup", "Gender"))
+siteDemo_new
 ```
 
