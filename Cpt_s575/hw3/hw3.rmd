@@ -24,14 +24,15 @@ msleep %>%
 ```{r}
 msleep %>%
     select(name, sleep_total, bodywt) %>%
-    arrange(desc=msleep$sleep_total) %>%
-    top_n(5)
+    arrange(desc(msleep$sleep_total)) %>%
+    head(5)
 ```
 ## c.
-```{r, results="hide"}
+```{r}
 msleep = msleep %>%
     mutate(wt_ratio=brainwt/bodywt,
            rem_ratio=sleep_rem/sleep_total)
+head(msleep)
 ```
 ## d.
 ```{r}
@@ -46,14 +47,18 @@ order_sum
 ```
 ## e.
 ```{r}
-#mutate(msleep, avg_ratio=order_sum[order_sum$order == order,]$avg)
-head(msleep)
-msleep_copy2 = data.frame(
-    msleep %>%
-        group_by(order) %>%
-        mutate(brainwt)
-                          )
+msleep1 <- msleep %>%
+    group_by(order) %>%
+    mutate(brainwt = ifelse(is.na(brainwt), mean(wt_ratio, na.rm = 1)*bodywt, brainwt))
+head(select(msleep1, name, order, brainwt), n = 8)
+
+msleep2 <- msleep %>%
+    group_by(order) %>%
+    mutate(brainwt = ifelse(is.na(brainwt), mean(brainwt, na.rm = 1), brainwt))
+head(select(msleep2, name, order, brainwt), n = 8)
 ```
+In my opinion, the first way is better. Since it has considered the difference of animal's body weight.
+I believe that animals in the same order  would have different brain size with different body size.
 
 
 
