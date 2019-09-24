@@ -1,0 +1,20 @@
+I use python3.6.
+
+You can run my program with './run.sh' to run all the files one by on,
+or just use 'python3 hw1_part1_a.py' to test one part of question.
+But please know that I choose to show every picture after each part of
+the program for obsering the performance(I also save them), maybe you
+need to close the picture to let it keep going on.
+
+Assume I can get training data from "data/fashion-mnist_train.csv",
+and test data from "data/fashion-mnist_test.csv".
+
+Every variables with pe or Perceptron is used for standard Perceptron.
+Every variables with pa or PA is used for Passive-Aggressive algorithm.
+Every variables with av or Average is used for averaged Perceptron.
+
+If not mentioned, the variables are used for training.
+If the variables have 'test' as part of their name, is used for test.
+
+
+

@@ -24,7 +24,6 @@ for i in range(len(train)):
     y_train.append(1 if train.iloc[i][0]%2 else -1)
 for i in range(len(test)):
     y_test.append(1 if test.iloc[i][0]%2 else -1)
-print(y_train)
 
 # initial the weight w.
 w_pe = np.zeros(784)

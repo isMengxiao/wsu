@@ -36,13 +36,13 @@ for i in range(T):
     for j in range(len(train)):
         x_train = train.iloc[j][1:]
         if sign(w_pe, x_train) != y_train[j]:
-            w_pe += y[j] * x_train
+            w_pe += y_train[j] * x_train
         if sign(w_pa, x_train) != y_train[j]:
-            w_pa += y[j] * x_train * (1-y[j]*w_pa*x_train) / \
+            w_pa += y_train[j] * x_train * (1-y_train[j]*w_pa*x_train) / \
                 (np.linalg.norm(x_train)**2)
         if not (j+1) % 5000:
             for k in range(len(test)):
-                x_test = test.iloc[j][1:]
+                x_test = test.iloc[k][1:]
                 if sign(w_pe, x_test) != y_test[k]:
                     Mistake_test_Perceptron[i*12 + (j+1)//5000 - 1] += 1
                 if sign(w_pa, x_test) != y_test[k]:
