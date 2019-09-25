@@ -18,6 +18,7 @@ def sign(w, x):
     else:
         return -1
 
+
 y_train = np.zeros(len(train))  # Translate the label to (+1,-1)
 y_test = np.zeros(len(train))
 for i in range(len(train)):
@@ -59,7 +60,6 @@ for i in range(T):
     # Since we still need more iteration, reset the weight
     # to prevent overfitting.
     w_av += (1/c) * u
-    print(Mistake_test_Perceptron[i])
 print("Plain Perceptron :", 1-Mistake_test_Perceptron/len(test))
 print("Average Perceptron: ", 1-Mistake_test_Average/len(test))
 plt.figure(num=3)

@@ -24,6 +24,8 @@ def sign(w, x):
         return 1
     else:
         return -1
+
+
 # initial the weight w.
 w_pe = np.zeros(784)
 w_pa = np.zeros(784)
@@ -39,8 +41,9 @@ for i in range(T):
         if sign(w_pe, x_train) != y_train[j]:
             w_pe += y_train[j] * x_train
         if sign(w_pa, x_train) != y_train[j]:
-            w_pa += y_train[j] * np.dot(x_train, (1 - y_train[j] * \
-                        np.dot(w_pa, x_train))) / np.dot(x_train, x_train)
+            w_pa += y_train[j] * \
+                np.dot(x_train, (1 - y_train[j] * np.dot(w_pa, x_train))) / \
+                np.dot(x_train, x_train)
         if not (j+1) % 5000:
             for k in range(len(test)):
                 x_test = test.iloc[k][1:]

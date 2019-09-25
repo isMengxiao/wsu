@@ -13,7 +13,6 @@ T = 50  # Training iterations
 y = np.zeros(len(train))  # Translate the label to (+1,-1)
 for i in range(len(train)):
     y[i] = -1 if train.iloc[i][0] % 2 else 1
-print(y)
 
 
 def sign(w, x):

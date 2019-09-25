@@ -24,6 +24,8 @@ def sign(w, x):
         return 1
     else:
         return -1
+
+
 # initial the weight w.
 w_pe = np.zeros(784)
 w_pa = np.zeros(784)

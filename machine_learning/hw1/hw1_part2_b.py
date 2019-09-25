@@ -3,7 +3,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.utils import shuffle
 
 import datetime
 start = datetime.datetime.now()  # Record the start time.
