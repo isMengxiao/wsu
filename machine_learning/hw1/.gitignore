@@ -5,3 +5,4 @@ hw1.pdf
 *.log
 *.aux
 *.dvi
+venv
