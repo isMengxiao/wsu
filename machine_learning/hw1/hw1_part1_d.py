@@ -11,12 +11,13 @@ test = pd.read_csv("data/fashion-mnist_test.csv")
 T = 20  # Training iterations
 
 
-y_train = []  # Translate the label to (+1,-1)
-y_test = []
+y_train = np.zeros(len(train))  # Translate the label to (+1,-1)
+y_test = np.zeros(len(train))
 for i in range(len(train)):
-    y_train.append(-1 if train.iloc[i][0] % 2 else 1)
+    y_train[i] = -1 if train.iloc[i][0] % 2 else 1
 for i in range(len(test)):
-    y_test.append(-1 if test.iloc[i][0] % 2 else 1)
+    y_test[i] = -1 if test.iloc[i][0] % 2 else 1
+
 
 def sign(w, x):
     if np.dot(w, x) >= 0:
@@ -38,8 +39,8 @@ for i in range(T):
         if sign(w_pe, x_train) != y_train[j]:
             w_pe += y_train[j] * x_train
         if sign(w_pa, x_train) != y_train[j]:
-            w_pa += y_train[j] * x_train * (1-y_train[j]*w_pa*x_train) / \
-                (np.linalg.norm(x_train)**2)
+            w_pa += y_train[j] * np.dot(x_train, (1 - y_train[j] * \
+                        np.dot(w_pa, x_train))) / np.dot(x_train, x_train)
         if not (j+1) % 5000:
             for k in range(len(test)):
                 x_test = test.iloc[k][1:]

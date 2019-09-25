@@ -2,3 +2,6 @@ data
 fashionmnist.zip
 train.csv
 hw1.pdf
+*.log
+*.aux
+*.dvi

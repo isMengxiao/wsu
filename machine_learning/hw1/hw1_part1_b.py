@@ -11,12 +11,12 @@ test = pd.read_csv("data/fashion-mnist_test.csv")
 T = 20  # Training iterations
 
 
-y_train = []  # Translate the label to (+1,-1)
-y_test = []
+y_train = np.zeros(len(train))  # Translate the label to (+1,-1)
+y_test = np.zeros(len(train))
 for i in range(len(train)):
-    y_train.append(-1 if train.iloc[i][0] % 2 else 1)
+    y_train[i] = -1 if train.iloc[i][0] % 2 else 1
 for i in range(len(test)):
-    y_test.append(-1 if test.iloc[i][0] % 2 else 1)
+    y_test[i] = -1 if test.iloc[i][0] % 2 else 1
 
 
 def sign(w, x):
@@ -41,8 +41,8 @@ for i in range(T):
             w_pe += y_train[j] * x
             Mistake_Perceptron[i] += 1
         if sign(w_pa, x) != y_train[j]:  # If PA mistake
-            w_pa += y_train[j] * x * (1-y_train[j]*w_pa*x) / \
-                    (np.linalg.norm(x)**2)
+            w_pa += y_train[j] * np.dot(x, (1-y_train[j]*np.dot(w_pa, x))) / \
+                    np.dot(x, x)
             Mistake_PA[i] += 1
     for j in range(len(test)):
         x = test.iloc[j][1:]
