@@ -86,7 +86,7 @@ plt.plot(1-Mistake_test_Perceptron/len(test), color="red", \
 plt.plot(1-Mistake_PA/len(train), color="blue", label="Passive-Aggressive")
 plt.plot(1-Mistake_test_PA/len(test), color="blue", \
          label="Passive-Aggressive_test", linestyle='--')
-plt.legend(loc='upper right')
+plt.legend()
 plt.xlabel('training iterations')
 plt.ylabel('the number of mistakes')
 plt.title("5.2-b four accuracy curves for 20 iterations")

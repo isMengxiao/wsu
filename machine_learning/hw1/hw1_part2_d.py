@@ -21,7 +21,7 @@ w_av = np.zeros(shape=(10, 784))
 Mistake_test_Perceptron = np.zeros(T*12)
 Mistake_test_PA = np.zeros(T*12)
 Mistake_test_Average = np.zeros(T*12)
-Total_examples = np.linspace(5000, 5000*240, 240)
+Total_examples = np.linspace(1, 240, 240) * 5000
 
 # Typical variable for average perceptron
 c = 1
@@ -104,13 +104,13 @@ for iteration in range(T):
 end = datetime.datetime.now()
 print("5.2 d:", start, end)
 plt.figure(num=8)
-plt.plot(1 - Total_examples, Mistake_test_Perceptron/len(test), \
+plt.plot(Total_examples, 1 - Mistake_test_Perceptron/len(test), \
          color="red", label="Perceptron_test")
-plt.plot(1 - Total_examples, Mistake_test_PA/len(test), color="blue", \
+plt.plot(Total_examples, 1 - Mistake_test_PA/len(test), color="blue", \
          label="Passive-Aggressive_test")
-plt.plot(1 - Total_examples, Mistake_test_Average/len(test), color="green", \
+plt.plot(Total_examples, 1 - Mistake_test_Average/len(test), color="green", \
          label="Average-Perceptron_test")
-plt.legend(loc='upper right')
+plt.legend()
 plt.xlabel('Number of training examples')
 plt.ylabel('The testing accuracy')
 plt.title("5.2-d Three test accuracy curve")

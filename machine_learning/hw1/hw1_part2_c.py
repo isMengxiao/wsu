@@ -90,11 +90,10 @@ plt.plot(1-Mistake_test_Perceptron/len(test), color="red", \
          label="Perceptron_test")
 plt.plot(1-Mistake_test_Average/len(test), color="blue", \
          label="Averate-Perceptron_test")
-plt.legend(loc='upper right')
+plt.legend()
 plt.xlabel('training iterations')
 plt.ylabel('the mistake ratio')
-plt.title("5.2-c the compare between stand Perceptron and Average Perceptron of \
-          20 iterations")
+plt.title("5.2-c Stand and Average Perceptron of 20 iterations")
 plt.savefig('./part2_c.jpg')
 plt.show()
 
