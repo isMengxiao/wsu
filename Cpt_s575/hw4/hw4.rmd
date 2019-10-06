@@ -1,0 +1,51 @@
+---
+title: "Cpts575 Hw4"
+author: "Mengxiao"
+output: pdf_document
+---
+# Part 1
+```{r}
+library(dplyr)
+library(graphics)
+Auto = read.csv("https://scads.eecs.wsu.edu/wp-content/uploads/2017/09/Auto.csv", na.string = '?')
+Auto = na.omit(Auto)
+#Auto = Auto[Auto$horsepower != '?',] #Moving out the missing data
+```
+##  a. Produce a scatterplot matrix
+```{r}
+pairs(Auto)
+```
+
+##  b. Compute the matrix of correlations.
+```{r}
+Auto2 = Auto %>% select(-name)
+cor(Auto2)
+```
+
+##  c. Perform a multiple linear regression.
+```{r}
+lr = lm(mpg~., data = Auto2)
+summary(lr)
+```
+### i. I think the 'origin' and 'year' are the most significant, since their absolute estimate of coefficients are the highest two.
+### ii. Means when the value of displacement increase 1%, the mpg will increase 0.019896%.
+
+##  d. Produce diagnostic plots of the linear regression fit.
+```{r}
+plot(lr)
+```
+#### The residual plots looks good, but still have some outliers.
+#### Yes, it identifies some unusually outliers
+
+##  e.
+
+
+# Part 2
+```{r}
+library(MASS)
+head(Boston)
+```
+##  a.
+```{r echo=FALSE}
+
+```
