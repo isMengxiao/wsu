@@ -4,7 +4,7 @@ author: "Mengxiao"
 output: pdf_document
 ---
 # Part 1
-```{r}
+```{r warning=FALSE}
 library(dplyr)
 library(graphics)
 Auto = read.csv("https://scads.eecs.wsu.edu/wp-content/uploads/2017/09/Auto.csv", na.string = '?')
@@ -18,7 +18,7 @@ pairs(Auto)
 
 ##  b. Compute the matrix of correlations.
 ```{r}
-Auto2 = Auto %>% select(-name)
+Auto2 = Auto %>% dplyr::select(-name)
 cor(Auto2)
 ```
 
@@ -27,17 +27,31 @@ cor(Auto2)
 lr = lm(mpg~., data = Auto2)
 summary(lr)
 ```
-### i. I think the 'origin' and 'year' are the most significant, since their absolute estimate of coefficients are the highest two.
+### i. I think the 'displacement', 'weight', 'year' and 'origin' have the statistically significant relationship with the 'mpg', since their P-value are less than '0.05', they are significant.
 ### ii. Means when the value of displacement increase 1%, the mpg will increase 0.019896%.
 
 ##  d. Produce diagnostic plots of the linear regression fit.
 ```{r}
 plot(lr)
 ```
-#### The residual plots looks good, but still have some outliers.
-#### Yes, it identifies some unusually outliers
 
-##  e.
+### The residual plots looks good, but still have some outliers.
+### Yes, it identifies some unusually outliers
+
+##  e. Fit linear regression models with interaction effects. 
+```{r}
+lm_e = lm(mpg~cylinders*displacement + weight*displacement, data=Auto2)
+summary(lm_e)
+```
+We can see from the summay that displacement and weight have statistically signifcant relationship, but the relationship between cylinders and displacement is not significant.
+
+##  f. Try transformations of the variables with X^3 and log(X).
+```{r}
+plot((Auto2$displacement)^3, Auto2$mpg)
+plot(sqrt(Auto2$displacement), Auto2$mpg)
+```
+
+### It looks like the distribution is more aggregated of X^3.
 
 
 # Part 2
@@ -46,6 +60,70 @@ library(MASS)
 head(Boston)
 ```
 ##  a.
-```{r echo=FALSE}
-
+```{r}
+lm_zn = lm(crim~zn, data=Boston)
+lm_indus = lm(crim~indus, data=Boston)
+lm_chas = lm(crim~chas, data=Boston)
+lm_nox = lm(crim~nox, data=Boston)
+lm_rm = lm(crim~rm, data=Boston)
+lm_age = lm(crim~age, data=Boston)
+lm_dis = lm(crim~dis, data=Boston)
+lm_rad = lm(crim~rad, data=Boston)
+lm_tax = lm(crim~tax, data=Boston)
+lm_ptratio = lm(crim~ptratio, data=Boston)
+lm_black = lm(crim~black, data=Boston)
+lm_lstat = lm(crim~lstat, data=Boston)
+lm_medv = lm(crim~medv, data=Boston)
 ```
+I find that only 'chas' don't have statistically significant relationship with crim, all of other variables have significant relationship. 
+
+##  b.
+```{r}
+lm_mul = lm(crim~., data=Boston)
+summary(lm_mul)
+```
+In my opinion, we can reject the 'zn', 'dis', 'rad', 'black' and 'medv', since their P-value are all less than 0.05.
+
+##  c.How do your results from (a) compare to your results from (b)?
+```{r}
+simple = c(lm_zn$coefficients[2], lm_indus$coefficients[2], lm_chas$coefficients[2], lm_nox$coefficients[2],
+           lm_rm$coefficients[2], lm_age$coefficients[2], lm_dis$coefficients[2], lm_rad$coefficients[2],
+           lm_tax$coefficients[2], lm_ptratio$coefficients[2], lm_black$coefficients[2], lm_lstat$coefficients[2],
+           lm_medv$coefficients[2])
+multi = c(lm_mul$coefficients)
+multi = multi[-1]
+plot(simple, multi)
+```
+The coefficients of simple is much higher than it of multiple, that the arrange of simple is 0 to 30 and for multiple is from -10 to 0. In my opinion, it is because simple predict only shows whether two variables have relationship and the rate of relation, but the multiple predict shows the rate of different variables' influence.
+
+##  d. Is there evidence of non-linear association between any of the predictors and the response?
+```{r results='hide'}
+lm_zn2 = lm(crim~poly(zn, 3), data=Boston)
+lm_indus2 = lm(crim~poly(indus, 3), data=Boston)
+lm_nox2 = lm(crim~poly(nox, 3), data=Boston)
+lm_rm2 = lm(crim~poly(rm, 3), data=Boston)
+lm_age2 = lm(crim~poly(age, 3), data=Boston)
+lm_dis2 = lm(crim~poly(dis, 3), data=Boston)
+lm_rad2 = lm(crim~poly(rad, 3), data=Boston)
+lm_tax2 = lm(crim~poly(tax, 3), data=Boston)
+lm_ptratio2 = lm(crim~poly(ptratio, 3), data=Boston)
+lm_black2 = lm(crim~poly(black, 3), data=Boston)
+lm_lstat2 = lm(crim~poly(lstat, 3), data=Boston)
+lm_medv2 = lm(crim~poly(medv, 3), data=Boston)
+
+summary(lm_zn2)
+summary(lm_indus2)
+summary(lm_nox2)
+summary(lm_rm2)
+summary(lm_age2)
+summary(lm_dis2)
+summary(lm_rad2)
+summary(lm_tax2)
+summary(lm_ptratio2)
+summary(lm_black2)
+summary(lm_lstat2)
+summary(lm_medv2)
+```
+I have found that only the 'black' don't have non-linear association, since the P-value of  quandratic and cubic coefficients are all higher than 0.05. The other variables all have non-linear  association, but some of them only have quandratic association and the other have cubic.
+
+# Part 3.
