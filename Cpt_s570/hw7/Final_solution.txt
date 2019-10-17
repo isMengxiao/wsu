@@ -1,0 +1,157 @@
+a. INPUT:
+(define (problem prob)
+    (:domain VACUUM)
+    (:objects A B)
+    (:init (room A) (dirty A) (dirty B))
+    (:goal (and (clean A) (clean B)))
+)
+(define (domain VACUUM)
+    (:predicates
+        (room ?r)
+        (dirty ?r)
+        (clean ?r)
+    )
+
+    (:action left
+        :precondition (room B)
+        :effect (and (not (room B)) (room A))
+    )
+
+    (:action right
+        :precondition (room A)
+        :effect (and (not (room A)) (room B))
+    )
+
+    (:action suctionA
+        :precondition (and (room A) (dirty A))
+        :effect (clean A)
+    )
+
+    (:action suctionB
+        :precondition (and (room B) (dirty B))
+        :effect (clean B)
+    )
+
+)
+
+b. OUTPUT:
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /usr/bin/python /home/ice/Documents/wsu/Cpt_s570/hw7/DIRNAME/builds/release/bin/translate/translate.py domain.pddl prob.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.000s CPU, 0.003s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.000s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.001s wall-clock]
+Preparing model... [0.000s CPU, 0.000s wall-clock]
+Generated 9 rules.
+Computing model... [0.000s CPU, 0.000s wall-clock]
+15 relevant atoms
+0 auxiliary atoms
+15 final queue length
+16 total queue pushes
+Completing instantiation... [0.000s CPU, 0.000s wall-clock]
+Instantiating: [0.000s CPU, 0.002s wall-clock]
+Computing fact groups...
+Finding invariants...
+4 initial candidates
+Finding invariants: [0.000s CPU, 0.001s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+2 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.000s CPU, 0.001s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.010s CPU, 0.000s wall-clock]
+Translating task: [0.010s CPU, 0.001s wall-clock]
+0 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+1 propositions removed
+Detecting unreachable propositions: [0.000s CPU, 0.000s wall-clock]
+Reordering and filtering variables...
+3 of 3 variables necessary.
+0 of 1 mutex groups necessary.
+4 of 4 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.000s CPU, 0.000s wall-clock]
+Translator variables: 3
+Translator derived variables: 0
+Translator facts: 6
+Translator goal facts: 2
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 4
+Translator axioms: 0
+Translator task size: 23
+Translator peak memory: 37092 KB
+Writing output... [0.000s CPU, 0.000s wall-clock]
+Done! [0.010s CPU, 0.009s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/ice/Documents/wsu/Cpt_s570/hw7/DIRNAME/builds/release/bin/downward --search 'astar(blind())' --internal-plan-file sas_plan < output.sas
+reading input... [t=9.9237e-05s]
+done reading input! [t=0.000412288s]
+Initializing blind search heuristic...
+Building successor generator...done! [t=0.00220024s]
+peak memory difference for successor generator creation: 0 KB
+time for successor generation creation: 9.424e-06s
+Variables: 3
+FactPairs: 6
+Bytes per state: 4
+Conducting best first search with reopening closed nodes, (real) bound = 2147483647
+New best heuristic value for blind: 1
+[g=0, 1 evaluated, 0 expanded, t=0.00241122s, 21076 KB]
+f = 1 [1 evaluated, 0 expanded, t=0.00244674s, 21076 KB]
+Initial heuristic value for blind: 1
+pruning method: none
+f = 2 [3 evaluated, 1 expanded, t=0.00250461s, 21076 KB]
+f = 3 [5 evaluated, 3 expanded, t=0.00254595s, 21076 KB]
+New best heuristic value for blind: 0
+[g=3, 7 evaluated, 5 expanded, t=0.00259411s, 21076 KB]
+Solution found!
+Actual search time: 0.000140563s [t=0.00263481s]
+suctiona  (1)
+right  (1)
+suctionb  (1)
+Plan length: 3 step(s).
+Plan cost: 3
+Expanded 6 state(s).
+Reopened 0 state(s).
+Evaluated 7 state(s).
+Evaluations: 7
+Generated 10 state(s).
+Dead ends: 0 state(s).
+Expanded until last jump: 3 state(s).
+Reopened until last jump: 0 state(s).
+Evaluated until last jump: 5 state(s).
+Generated until last jump: 6 state(s).
+Number of registered states: 7
+Int hash set load factor: 7/8 = 0.875
+Int hash set resizes: 3
+Search time: 0.000267158s
+Total time: 0.00264063s
+Solution found.
+Peak memory: 21076 KB
+Remove intermediate file output.sas
+search exit code: 0
+
