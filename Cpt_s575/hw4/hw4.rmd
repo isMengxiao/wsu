@@ -4,7 +4,7 @@ author: "Mengxiao"
 output: pdf_document
 ---
 # Part 1
-```{r warning=FALSE}
+```{r results='hide'}
 library(dplyr)
 library(graphics)
 Auto = read.csv("https://scads.eecs.wsu.edu/wp-content/uploads/2017/09/Auto.csv", na.string = '?')
@@ -126,4 +126,14 @@ summary(lm_medv2)
 ```
 I have found that only the 'black' don't have non-linear association, since the P-value of  quandratic and cubic coefficients are all higher than 0.05. The other variables all have non-linear  association, but some of them only have quandratic association and the other have cubic.
 
-# Part 3.
+# Part 3
+
+## a.
+
+### i.The prediction would be not impartial and not exact.
+
+### ii. It means the weight of each coefficients cannot be seperated exactly.
+
+#### iii. The prediction will have more error since the cofidence intervals are not exact, sometimes we will accept some variables that don't significant before.
+
+## b. Use the covariates between two errors to constrain the correlation error.
