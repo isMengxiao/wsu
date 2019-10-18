@@ -28,7 +28,7 @@ lr = lm(mpg~., data = Auto2)
 summary(lr)
 ```
 ### i. I think the 'displacement', 'weight', 'year' and 'origin' have the statistically significant relationship with the 'mpg', since their P-value are less than '0.05', they are significant.
-### ii. Means when the value of displacement increase 1%, the mpg will increase 0.019896%.
+### ii. Means when the value of displacement increase 1, the mpg will increase 0.019896.
 
 ##  d. Produce diagnostic plots of the linear regression fit.
 ```{r}
@@ -124,7 +124,7 @@ summary(lm_black2)
 summary(lm_lstat2)
 summary(lm_medv2)
 ```
-I have found that only the 'black' don't have non-linear association, since the P-value of  quandratic and cubic coefficients are all higher than 0.05. The other variables all have non-linear  association, but some of them only have quandratic association and the other have cubic.
+I have found that only the 'black' don't have non-linear association, since the P-value of  quadratic and cubic coefficients are all higher than 0.05. The other variables all have non-linear  association, but some of them only have quadratic association and the other have cubic.
 
 # Part 3
 
