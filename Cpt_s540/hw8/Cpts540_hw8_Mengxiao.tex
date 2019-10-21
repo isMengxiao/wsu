@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage{graphicx}
+    \author{Mengxiao Zhang-11651502}
+    \title {Cpt\_S540\_hw08}
+\begin{document}
+    \maketitle
+    \section{hw 8}
+        \subsection{1}
+            \subsubsection{a.}
+                $breeze$ = $\neg b_{1,1}\wedge\neg b_{1,2}\wedge\neg b_{1,3}\wedge\neg b_{2,3}\wedge b_{3,3}$\\
+                $known$ = $\neg p_{1,1}\wedge\neg p_{1,2}\wedge\neg p_{1,3}\wedge\neg p_{2,3}\wedge\neg p_{3,3}$\\
+                $frontier$ = $\{p_{3,2}, p_{4,3}\}$\\
+                $query$ = $p_{3,4}$
+                $other$ = other 8 pit variables.
+            \subsubsection{b.}
+                \textbf{P}$(p_{3,4}|breeze,know)$
+                \\=\textbf{P}$(p_{3,4}\wedge breeze\wedge know)/P(breeze\wedge know)$
+                \\=$\alpha$\textbf{P}$(p_{3,4}\wedge breeze\wedge know)$
+                \\=$\alpha$\textbf{P}$(p_{3,4})\sum_{frontier}$\textbf{P}$(breeze|p_{3,4}, know, frontier)P(frontier)$
+                \\=$\alpha<0.2(0.2*0.2+0.2*0.8*2+0.8*0.8), 0.8(0.2*0.2+0.2*0.8*2)>$
+                \\=$\alpha<0.2(0.04+0.16*2+0.64),0.8(0.04+0.16*2)>$
+                \\=$\alpha<0.2,0.288>$
+                \\=$<0.4098,0.5902>$
+        \subsection{2}
+        \subsection{3}
+            \subsubsection{a.}
+                \par $P(AIDone=true,Costume=false,Party=true,HaveFun=true,MakeFriends=true)$
+                \\$= 0.4*0.7*0.5*0.6*0.7$
+                \\$= 0.00588$
+            \subsubsection{b.}
+                \par $P(HaveFun=true|AIDone=false,Costume=true)$
+                \\$= 0.4*0.6+0.6*0.2$
+                \\$= 0.36$
+            \subsubsection{c.}
+                \par $P(AIDone=true|HaveFun=true,MakeFriends=true)$
+                \\$=P(AIDone=true\wedge HaveFun=true\wedge MakeFriends=true)/P(HaveFun=true)P(MakeFriends=true)$
+                \\$=0.4*(0.9*0.6*0.7+0.1*0.2*0.4+0.5*0.6*0.7+0.5*0.2*0.4)$
+                \\$=0.2544$
+        \subsection{4}
+        \subsection{5}
+        \subsection{6}
+            \textbf{P}$(AIDone)=<0.4,0.6>$, AIDone=false
+            \\\textbf{P}$(Costume)=<0.3,0.7>$, Costume=false
+            \\\textbf{P}$(Party|AIDone=false, Costume=false)=<0.2,0.8>$, Party=false
+            \\\textbf{P}$(HaveFun|Party=false)=<0.2,0.8>$, HaveFun=false
+            \\\textbf{P}$(MakeFriends|Party=false)=<0.4,0.6>$, MakeFriends=false
+            \\Finally, the most likely sample is [false,false,false,false,false]
+        \subsection{7}
+            \textbf{P}$(AIDone)=<0.4,0.6>$, AIDone=true
+            \\\textbf{P}$(Costume)=<0.3,0.7>$, Costume=true
+            \\\textbf{P}$(Party|AIDone=true, Costume=true)=<0.9,0.1>$, Party=false
+            \\\textbf{P}$(HaveFun|Party=false)=<0.2,0.8>$, HaveFun=true
+            \\\textbf{P}$(MakeFriends|Party=false)=<0.4,0.6>$, MakeFriends=true
+            \\Finally, the least likely sample is [true,true,false,true,true]
+\end{document}
