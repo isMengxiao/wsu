@@ -29,12 +29,13 @@
                 \\$= 0.0588$
             \subsubsection{b.}
                 \par $P(HaveFun=true|AIDone=false,Costume=true)$
+                \\$= P(Party=true|AIDone=false,Costume=true)*P(HaveFun=true|Party=true)+P(Party=false|AIDone=false,Costume=true)*P(HaveFun=true|Party=false)$
                 \\$= 0.4*0.6+0.6*0.2$
                 \\$= 0.36$
             \subsubsection{c.}
                 \par Compute \textbf{P}$(AIDone|HaveFun=true,MakeFriends=true)$
-                \\$= P(HaveFun=true,MakeFriends=true|AIDone)*\textbf{P}(AIDone)/P(HaveFun=true, MakeFriends=true)$
-                \\$= \alpha<P(HaveFun=true,MakeFriends=true|AIDone=true),P(HaveFun=true,MakeFriends=true|AIDone=false)>$
+                \\$= \textbf{P}(HaveFun=true,MakeFriends=true|AIDone)*\textbf{P}(AIDone)/P(HaveFun=true, MakeFriends=true)$
+                \\$= \alpha<P(HaveFun=true,MakeFriends=true|AIDone=true)*P(AIDone=true),P(HaveFun=true,MakeFriends=true|AIDone=false)*P(AIDone=false)>$
                 \\$= \alpha<0.4[0.6*0.7(0.3*0.9+0.7*0.5)+0.2*0.4(0.3*0.1+0.7*0.5)],$
                 \\$0.6[0.6*0.7(0.3*0.4+0.7*0.2)+0.2*0.4(0.3*0.6+0.7*0.8)]>$
                 \\$= \alpha<0.11632,0.10104>$
