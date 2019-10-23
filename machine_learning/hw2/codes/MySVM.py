@@ -9,16 +9,16 @@ def SVM_a(x_train, y_train, x_validation, y_validation, x_test, y_test):
     train_accuracy = np.zeros(len(range(-4, 5)))
     validation_accuracy = np.zeros(len(range(-4, 5)))
     test_accuracy = np.zeros(len(range(-4, 5)))
-    print("init correct")
-    for i in range(-4, 5):
+    for i in np.arange(-4, 5, dtype=float):
         MyC = 10**i
         iteration.append(str(MyC))
         clf = LinearSVC(C=MyC)
         clf.fit(x_train, y_train)
-        train_accuracy[i+4] = np.sum(y_train == clf.predict(x_train))
-        validation_accuracy[i+4] = np.sum(y_validation ==
+        index = int(i+4)
+        train_accuracy[index] = np.sum(y_train == clf.predict(x_train))
+        validation_accuracy[index] = np.sum(y_validation ==
                                           clf.predict(x_validation))
-        test_accuracy[i+4] = np.sum(y_test == clf.predict(x_test))
+        test_accuracy[index] = np.sum(y_test == clf.predict(x_test))
 
     plt.figure(num=1)
     plt.plot(train_accuracy/len(y_train), color="red",
@@ -34,8 +34,8 @@ def SVM_a(x_train, y_train, x_validation, y_validation, x_test, y_test):
     plt.title("1-a Accuracy curve")
     plt.savefig('./part1_a.jpg')
     #plt.show()
-    best = validation_accuracy.argmax()
-    Best_C = 10**(best-4)
+    best = int(validation_accuracy.argmax()-4)
+    Best_C = 10**best
     Best_element = [train_accuracy[best]/len(y_train),
                     validation_accuracy[best]/len(y_validation),
                     test_accuracy[best]/len(y_test)]
@@ -52,7 +52,7 @@ def SVM_b(MyC, x_train, y_train, x_test, y_test):
     y_predict = clf.predict(x_test)
     test_accuracy = np.sum(y_test == y_predict)
     cm_test = metrics.confusion_matrix(y_test, y_predict)
-    print('1-b-testing accuracy:', test_accuracy)
+    print('1-b-testing accuracy:', test_accuracy/len(y_test))
     print('1-b-confusion matrix:', cm_test)
     return test_accuracy, cm_test
 
