@@ -16,7 +16,6 @@ def MyKP(x_train, y_train, x_validation, y_validation,
 
     for iteration in range(5):
         for i in range(len(x_train)):
-            y_hat = 0
             x = x_train[i]
             y = y_train[i]
 
@@ -24,8 +23,8 @@ def MyKP(x_train, y_train, x_validation, y_validation,
 
             if y_hat != y:
                 training_mistakes[iteration] += 1
-                alpha[:, y] += 1
-                alpha[:, y_hat] -= 1
+                alpha[i, y] += 1
+                alpha[i, y_hat] -= 1
         #c = input('plause')
 
     w = np.dot(alpha.T, x_train)

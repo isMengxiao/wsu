@@ -1,0 +1,4 @@
+train_accuracy: 78.71666666666667 %
+validation_accuracy: 78.9 %
+test_accuracy: 78.8 %
+training mistakes: [10233.  8191.  7637.  7216.  6900.]
