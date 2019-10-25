@@ -84,18 +84,17 @@ def predict(groups, tree, default=4.0):
 
 def test(data, data_name, tree):
     groups = data.iloc[:, :-1].to_dict(orient="records")
-    prediction = pd.DataFrame(columns=["predict"])
+    prediction = np.zeros(len(data))
     for i in range(len(data)):
-        prediction.loc[i, "predict"] = predict(groups[i], tree, 4.0)
-    print(prediction)
-    print("data class:", data["class"])
+        prediction[i] = predict(groups[i], tree, 4.0)
     print(data_name, 'Accuracy is:',
-          (np.sum(prediction["predict"] == data["class"])/len(data)))
+          (np.sum(prediction == data["class"])/len(data)))
 
 if __name__ == "__main__":
     data_train, data_validation, data_test =\
         load_data('data/breast-cancer-wisconsin.data')
     tree = ID3_tree(data_train, data_train, data_train.columns[:-1])
     print(tree)
+    test(data_train, 'training', tree)
     test(data_validation, 'validation', tree)
-    test(data_test, 'test', tree)
+    test(data_test, 'testing', tree)
