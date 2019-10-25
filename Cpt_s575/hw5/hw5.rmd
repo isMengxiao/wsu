@@ -30,5 +30,9 @@ So, the students with 3.0 GPA and PSQI score of 3 need to study 41.2 hours to ha
 # Part 2
 ##  a.
 ```{r}
-sections = c("world news", "science", "business", "games", "technology", "sport", "environment")
+library(GuardianR)
+sections = c("world news", "science", "business", "technology", "sport", "environment")
+data = get_guardian("state", section = "world", from.date = "2019-04-25", to.date = "2019-06-25",
+                    api.key="14453543-e613-4acb-a757-e79000c47ca9")
 ```
+
