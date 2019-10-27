@@ -29,37 +29,39 @@ $$\Rightarrow a = 41.2$$
 So, the students with 3.0 GPA and PSQI score of 3 need to study 41.2 hours to have 50% chance of getting an A.
 
 # Part 2
-##  a.
+##  a. Data Collection.
 ```{r}
 library(RJSONIO)
 sections = c("world", "science", "business", "technology", "sport", "environment")
-#mydata = setNames(data.frame(matrix(ncol = 5, nrow = 0)),
-#                  c("id", "title", "body", "wc", "section"))
+mydata = setNames(data.frame(matrix(ncol = 4, nrow = 0)),
+                  c("id", "title", "body", "section"))
 n = 0
 dataset = list()
 for (s in 1:length(sections)){
     for (page in 1:10){
-        url = paste("http://content.guardianapis.com/search?section=", sections[s], "&lang=en&show-fields=wordcount%2Cbody&page=", page, "&page-size=120&api-key=14453543-e613-4acb-a757-e79000c47ca9", sep="")
+        url = paste("http://content.guardianapis.com/search?section=", sections[s], "&lang=en&show-fields=body&page=", page, "&page-size=120&api-key=14453543-e613-4acb-a757-e79000c47ca9", sep="")
         data = fromJSON(url)$response$results
-        for (i in 1:120)
-        dataset[[((s-1)*10+page-1)*120+i]] = data[[i]]
-    }
-}
-#for (section in sections){
-    for (page in 1:10){
-        for i in (1:120){
-            mydata[s*1200+(page-1)*100+i,] <- c(data[section][page][[i]]$id, data[section][page][[i]]$webTitle, data[section][page][[i]]$fields[[1]], data[section][page][[i]]$fields[[2]],  data[section][page][[i]]$sectionId)
-
-            Encoding(mydata[s*1200+(page-1)*100+i,][["body"]]) <- "UTF-8"
-            Encoding(mydata[s*1200+(page-1)*100+i,][["title"]]) <- "UTF-8"
-        
-            mydata[s*1200+(page-1)*100+i,]$body <- gsub("<.*?>[^[:alnum:][:space:]]", "", mydata[s*1000+(page-1)*100+i,][["body"]])
-        #    mydata[s*1000+(page-1)*100+i,]$body <- gsub("[^[:alnum:][:space:]]","", mydata[s*1000+(page-1)*100+i,][["body"]])
-            mydata[s*1200+(page-1)*100+i,]$body <- tolower(mydata[s*1000+(page-1)*100+i,][["body"]])
+        for (i in 1:120){
+            if (data[[i]]$type == "article"){
+                mydata[nrow(mydata)+1,] = c(data[[i]]$id, data[[i]]$webTitle, data[[i]]$fields, data[[i]]$sectionId)
+            }
         }
     }
-    s = s+1
 }
-#strwrap(mydata[137, ]$body, width = 80)
+head(mydata)
+```
+ 
+## b. Data cleaning.
+```{r}
+for (i in 1:nrow(mydata)){
+    #Encoding(mydata[i,][["body"]]) <- "UTF-8"
+    #Encoding(mydata[i,][["title"]]) <- "UTF-8?gsub"
+    mydata[i,]$body <- gsub("<.*?>", "", mydata[i,][["body"]])
+    mydata[i,]$body <- gsub("[^[:alnum:][:space:]]",
+"", mydata[i,][["body"]])
+    mydata[i,]$body <- tolower(mydata[i,][["body"]])
+}
+strwrap(mydata[432,]$body, width=80)
 ```
 
+## c. Tokenization.
