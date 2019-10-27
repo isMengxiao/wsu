@@ -44,7 +44,7 @@ def MyKP(x_train, y_train, x_validation, y_validation,
     plt.xlabel("iteration")
     plt.ylabel("mistakes")
     plt.title("2 The Number of Training Mistakes")
-    name = '../part2-'+degree+'./pg'
+    name = '../part2-%d.jpg' % degree
     plt.savefig(name)
     print("train_accuracy:", train_accuracy*100, "%")
     print("validation_accuracy:",

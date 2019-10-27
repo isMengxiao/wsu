@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from MySVM import SVM_a, SVM_b, SVM_c
-#from KernelizedPerceptron import MyKP
+from numpy import np
+from pandas import np
+from KernelizedPerceptron import MyKP
+from sklearn.model_selection import train_test_split
+from DecisionTree import load_data, ID3_tree, test
 
 
 def load_mnist(path, kind='train'):
@@ -64,4 +68,17 @@ if __name__ == "__main__":
                     images_test, labels_test)
 
     #  Question2
-    #part2 = MyKP
+    x_train, x_validation, y_train, y_validation = \
+        train_test_split(images, labels, test_size=0.2)
+    part2 = MyKP(x_train, y_train, x_validation,
+                 y_validation, images_test, labels_test, degree)
+
+    #  Question3
+    data_train, data_validation, data_test = \
+        load_data('data/breast-cancer-wisconsin.data')
+    tree = ID3_tree(data_train, data_train, data_train.columns[:-1])
+    print(tree)
+    test(data_train, 'training', tree)
+    test(data_validation, 'validation', tree)
+    test(data_test, 'testing', tree)
+

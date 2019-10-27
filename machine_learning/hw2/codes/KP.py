@@ -15,4 +15,5 @@ if __name__ == '__main__':
         train_test_split(images, labels, test_size=0.2)
     degree = [2, 3, 4]
     for i in degree:
-        MyKP(x_train, y_train, x_validation, y_validation, x_test, y_test, i)
+        MyKP(x_train, y_train, x_validation,
+             y_validation, x_test, y_test, i)
