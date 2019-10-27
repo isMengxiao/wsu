@@ -22,6 +22,7 @@ So, the student is part(a) needs to study 44.8 hours to have 50% chance of getti
 
 ##  c. How many hours would a student with 3.0 GPA and a PSQI score of 3 need to have a 50% chance of getting an A.
 $$\hat{p}(X_1=a, x_2=3.0, x_3=3)=0.5$$
+
 $$\Rightarrow\frac{e^{-7+0.1a+3.0-0.04*3}}{1+e^{-7+0.1a_1+3.0-0.04*3}} = 0.5$$
 $$\Rightarrow -7+0.1a+3.0-0.04*3 = 0$$
 $$\Rightarrow a = 41.2$$
@@ -31,8 +32,31 @@ So, the students with 3.0 GPA and PSQI score of 3 need to study 41.2 hours to ha
 ##  a.
 ```{r}
 library(GuardianR)
-sections = c("world news", "science", "business", "technology", "sport", "environment")
-data = get_guardian("state", section = "world", from.date = "2019-04-25", to.date = "2019-06-25",
-                    api.key="14453543-e613-4acb-a757-e79000c47ca9")
+sections = c("world", "science", "business", "technology", "sport", "environment")
+mydata = setNames(data.frame(matrix(ncol = 5, nrow = 0)),
+                  c("id", "title", "body", "wc", "section"))
+s = 0
+for (section in sections){
+    sums = 0
+    for (page in 1:10){
+        data = fromJSON(paste("http://content.guardianapis.com/search?section=", section, "&show-fields=wordcount%2Cbody&page=", page, "&page-size=120&api-key=14453543-e613-4acb-a757-e79000c47ca9", sep=""))$response$results 
+        for (i in 1:120){
+            if (data[[i]]["type"]!="article"){
+                sums = sums+1
+            }
+        
+            mydata[s*1000+(page-1)*100+i,] <- c(data[[i]]$id, data[[i]]$webTitle, data[[i]]$fields[[1]], data[[i]]$fields[[2]],  data[[i]]$sectionId)
+
+            Encoding(mydata[s*1000+(page-1)*100+i,][["body"]]) <- "UTF-8"
+            Encoding(mydata[s*1000+(page-1)*100+i,][["title"]]) <- "UTF-8"
+        
+            mydata[s*1000+(page-1)*100+i,]$body <- gsub("<.*?>[^[:alnum:][:space:]]", "", mydata[s*1000+(page-1)*100+i,][["body"]])
+        #    mydata[s*1000+(page-1)*100+i,]$body <- gsub("[^[:alnum:][:space:]]","", mydata[s*1000+(page-1)*100+i,][["body"]])
+            mydata[s*1000+(page-1)*100+i,]$body <- tolower(mydata[s*1000+(page-1)*100+i,][["body"]])
+        }
+    }
+    s = s+1
+}
+strwrap(mydata[137, ]$body, width = 80)
 ```
 
