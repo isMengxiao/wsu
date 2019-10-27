@@ -12,7 +12,7 @@
                 \par Since I use LinearSVC, I cannot plot the
                 number of support vectors. And finally I find the best C is 0.001.
             \subsubsection{b}
-                \par The testing accuracy: 77.69\%.
+                \par When C is 0.001, the testing accuracy: 77.69\%.
                 \par The corresponding confusion matrix:
                 \[
                 \left[
@@ -40,6 +40,9 @@
 \\$array([1539,  169, 1720, 1301, 1815,  941, 2491,  857,  374,  463], dtype=int32),$
 \\$array([1362,  149, 1460, 1148, 1556,  993, 2245,  766,  321,  399], dtype=int32)]$
 \\ $The\ best\ degree: 2$
+\\ According to these data, we can know that with the kernel degree increase, the accuracy of 
+validation and test are decrease, and the number of support vectors are also decrease. So that 
+the degree 2 is the best one for this poly-kernel SVM
         \subsection{Problem 2}
 \\$train\ accuracy: 90.12083333333332 \%$
 \\$validation\ accuracy: 89.51666666666667 \%$
@@ -50,4 +53,10 @@
 \\$validation\ Accuracy: 65.00\%$
 \\$testing\ Accuracy: 74.28571428571429\%$
             \subsubsection{d}
+\\$training\ Accuracy: 86.40167\%$
+\\$validation\ Accuracy: 97.014925\%$
+\\$test\ Accuracy: 93.9338235\%$
+\\ From these data, we can not that with pruning the tree, the training accuracy is decrease 
+but validation accuracy and testing accuracy are both increase. I think it is because of the 
+overfitting, and when we do the pruning, it become more fittable.
 \end{document}

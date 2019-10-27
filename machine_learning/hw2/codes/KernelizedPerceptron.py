@@ -29,27 +29,27 @@ def MyKP(x_train, y_train, x_validation, y_validation,
 
     w = np.dot(alpha.T, x_train)
 
-    for i in range(len(x_train)):
-        if np.dot(x_train[i], w.T).argmax() != y_train[i]:
-            train_mistake += 1
-    for i in range(len(x_validation)):
-        if np.dot(x_validation[i], w.T).argmax() != y_validation[i]:
-            validation_mistake += 1
-    for i in range(len(x_test)):
-        if np.dot(x_test[i], w.T).argmax() != y_test[i]:
-            test_mistake += 1
-
+    train_accuracy =\
+    np.sum([pre.argmax() for pre in np.dot(x_train, w.T)]
+           == y_train)/len(y_train)
+    vali_accuracy =\
+    np.sum([pre.argmax() for pre in np.dot(x_validation, w.T)]
+           == y_validation)/len(y_validation)
+    test_accuracy =\
+    np.sum([pre.argmax() for pre in np.dot(x_train, w.T)]
+           == y_test)/len(y_test)
     plt.figure(num=2)
     plt.plot(training_mistakes, color="red", label="training mistakes")
     plt.legend()
     plt.xlabel("iteration")
     plt.ylabel("mistakes")
     plt.title("2 The Number of Training Mistakes")
-    plt.savefig('../part2.jpg')
-    print("train_accuracy:", train_mistake/len(x_train)*100, "%")
+    name = '../part2-'+degree+'./pg'
+    plt.savefig(name)
+    print("train_accuracy:", train_accuracy*100, "%")
     print("validation_accuracy:",
-          validation_mistake/len(x_validation)*100, "%")
-    print("test_accuracy:", test_mistake/len(x_test)*100, "%")
+          vali_accuracy*100, "%")
+    print("test_accuracy:", test_accuracy*100, "%")
     print("training mistakes:", training_mistakes)
 
 
