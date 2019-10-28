@@ -48,7 +48,7 @@ for (page in 1:10){
         }
     }
 }
-head(mydata)
+mydata[1,]$body
 ```
  
 ## b. Data cleaning.
@@ -77,16 +77,19 @@ as.matrix(TermMatrix[32, which(as.matrix(TermMatrix[32, ]) != 0)])
 ## d. Classification.
 ```{r}
 library(e1071)
+library(caret)
 TermMatrix = removeSparseTerms(TermMatrix, 0.99)
 
 cor_matrix = cor(as.matrix(TermMatrix))
-cor_terms = sort(findCorrelation(cor_matrix, cutoff = 0.85))
-TermMatrix = TermMatrix[, ~c(cor_terms)]
+cor_terms = sort(findCorrelation(cor_matrix, cutoff = 0.9))
+TermMatrix = TermMatrix[, -c(cor_terms)]
 
-TM_train = TermMatrix[1:floor(nrow(TermMatrix)),]
-TM_test = TermMatrix[floor(nrow(TermMatrix))+1,]
-data_train = as.facotr(mydata[1:floot(nrow(mydata)),])
-data_test = as.facotr(mydata[floor(nrow(mydata)+1:),])
+TM_train = TermMatrix[1:floor(nrow(TermMatrix)*0.8),]
+TM_test = TermMatrix[(floor(nrow(TermMatrix)*0.8)+1):nrow(TermMatrix),]
+data_train = mydata[1:floor(nrow(mydata)*0.8), ]
+data_test = mydata[(floor(nrow(mydata)*0.8)+1):nrow(mydata), ]
+data_train$section = as.factor(data_train$section)
+data_test$section = as.factor(data_test$section)
 
 m = naiveBayes(as.matrix(TM_train), data_train$section)
 p = predict(m, as.matrix(TM_test))
