@@ -48,7 +48,7 @@ for (page in 1:10){
         }
     }
 }
-mydata[1,]$body
+mydata[1,]$title
 ```
  
 ## b. Data cleaning.
