@@ -37,8 +37,8 @@ mydata = setNames(data.frame(matrix(ncol = 4, nrow = 0)),
                   c("id", "title", "body", "section"))
 n = 0
 dataset = list()
-for (s in 1:length(sections)){
-    for (page in 1:10){
+for (page in 1:10){
+    for (s in 1:length(sections)){
         url = paste("http://content.guardianapis.com/search?section=", sections[s], "&lang=en&show-fields=body&page=", page, "&page-size=120&api-key=14453543-e613-4acb-a757-e79000c47ca9", sep="")
         data = fromJSON(url)$response$results
         for (i in 1:120){
@@ -54,8 +54,8 @@ head(mydata)
 ## b. Data cleaning.
 ```{r}
 for (i in 1:nrow(mydata)){
-    #Encoding(mydata[i,][["body"]]) <- "UTF-8"
-    #Encoding(mydata[i,][["title"]]) <- "UTF-8?gsub"
+    Encoding(mydata[i,][["body"]]) <- "UTF-8"
+    Encoding(mydata[i,][["title"]]) <- "UTF-8?gsub"
     mydata[i,]$body <- gsub("<.*?>", "", mydata[i,][["body"]])
     mydata[i,]$body <- gsub("[^[:alnum:][:space:]]",
 "", mydata[i,][["body"]])
@@ -65,3 +65,30 @@ strwrap(mydata[432,]$body, width=80)
 ```
 
 ## c. Tokenization.
+```{r}
+library(tm)
+TermMatrix = DocumentTermMatrix(Corpus(VectorSource(mydata$body)),
+                                control=list(removeNumbers=TRUE,
+                                                stopwords=TRUE,
+                                                stemming=TRUE))
+as.matrix(TermMatrix[32, which(as.matrix(TermMatrix[32, ]) != 0)])
+```
+
+## d. Classification.
+```{r}
+library(e1071)
+TermMatrix = removeSparseTerms(TermMatrix, 0.99)
+
+cor_matrix = cor(as.matrix(TermMatrix))
+cor_terms = sort(findCorrelation(cor_matrix, cutoff = 0.85))
+TermMatrix = TermMatrix[, ~c(cor_terms)]
+
+TM_train = TermMatrix[1:floor(nrow(TermMatrix)),]
+TM_test = TermMatrix[floor(nrow(TermMatrix))+1,]
+data_train = as.facotr(mydata[1:floot(nrow(mydata)),])
+data_test = as.facotr(mydata[floor(nrow(mydata)+1:),])
+
+m = naiveBayes(as.matrix(TM_train), data_train$section)
+p = predict(m, as.matrix(TM_test))
+confusionMatrix(p, data_test$section)
+```

@@ -1,0 +1,76 @@
+---
+title: "Project"
+author: "Mengxiao"
+date: "2019/10/27"
+output: pdf_document
+---
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+data <- read.csv('https://scads.eecs.wsu.edu/wp-content/uploads/2017/10/AM_strains_clean.csv', fileEncoding='utf-16', na.string = '?', sep='\t')
+```
+```{r echo=false}
+location_levels = levels(data$Location.1)
+location_levels = location_levels[2:length(location_levels)]
+
+for (i in levels(data$Location.2)){
+  if (i %in% location_levels){
+    next
+  }
+  if (i == ''){
+    next
+  }
+  location_levels[length(location_levels)+1] = i
+}
+
+for (i in levels(data$Location.3)){
+  if (i %in% location_levels){
+    next
+  }
+  if (i == ''){
+    next
+  }
+  location_levels[length(location_levels)+1] = i
+}
+for (i in levels(data$Location.4)){
+  if (i %in% location_levels){
+    next
+  }
+  if (i == ''){
+    next
+  }
+  location_levels[length(location_levels)+1] = i
+}
+for (i in levels(data$Location.5)){
+  if (i %in% location_levels){
+    next
+  }
+  if (i == ''){
+    next
+  }
+  location_levels[length(location_levels)+1] = i
+}
+```
+```{r}
+location_levels
+```
+```{r}
+mydata = data.frame(location_levels)
+mydata$sets = rep(0, times=length(mydata))
+for (i in 1:nrow(mydata)){
+  mydata$sets[i] = 0
+  for (j in 1:nrow(data)){
+    temp = data[j,]
+    if ((temp$Location.1 == location_levels[i]) | (temp$Location.2 == location_levels[i]) | (temp$Location.3 == location_levels[i]) |
+        (temp$Location.4 == location_levels[i]) | (temp$Location.5 == location_levels[i])){
+          mydata$sets[i] = mydata$sets[i]+1
+        }
+  }
+}
+mydata = mydata %>% 
+  separate(location_levels, into=c("x", "y"), sep=",")
+mydata$x = as.numeric(mydata$x)
+mydata$y = as.numeric(mydata$y)
+```
