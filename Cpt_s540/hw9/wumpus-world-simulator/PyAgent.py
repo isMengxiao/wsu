@@ -3,6 +3,7 @@
 from random import randint
 import Action
 import Orientation
+import itertools as it
 
 
 class WorldState:
@@ -34,6 +35,7 @@ class Agent:
         self.clearLocations = []
         self.breezeLocations = []
         self.pitLocations = []
+        self.probability = []
 
     def Initialize(self):
         self.worldState.agentLocation = [1, 1]
@@ -41,6 +43,7 @@ class Agent:
         self.worldState.agentHasArrow = True
         self.worldState.agentHasGold = False
         self.previousAction = Action.CLIMB
+        self.probability = [[0.20]*5] * 5
         self.actionList = []
 
         # HW5
@@ -74,6 +77,7 @@ class Agent:
         action = self.actionList.pop(0)
         self.previousAction = action
         self.previousPercept = percept
+        a = input()
         return action
 
     def GameOver(self, score):
@@ -371,11 +375,28 @@ class Agent:
         print("")
 
     # hw9
+
+    def UDLR(self, location):
+        up = [location[0], location[1]+1]
+        down = [location[0], location[1]-1]
+        left = [location[0]-1, location[1]]
+        right = [location[0]+1, location[1]]
+        return [up, down, left, right]
+
+
+    # hw9
+    def PrintProbability(self):
+        print("Probability")
+        for i in self.probability:
+            print("%.2f %.2f %.2f %.2f %.2f" % (i[0], i[1], i[2], i[3], i[4]))
+    # hw9
     def ComputeProbability(self):
         frontier = []
         size = 5
         # compute frontier
         for locat in self.visitedLocations:
+            print('visited:', locat)
+            self.probability[locat[0]-1][locat[1]-1] = 0.00
             up = [locat[0], locat[1]+1 if locat[1]+1 < size else locat[1]]
             down = [locat[0], locat[1]-1 if locat[1]-1 > 0 else locat[1]]
             left = [locat[0]-1 if locat[0]-1 > 0 else locat[0], locat[1]]
@@ -383,16 +404,42 @@ class Agent:
             for update in [up, down, left, right]:
                 if update not in self.visitedLocations:
                     self.AddNewLocation(frontier, update)
+        for pits in self.pitLocations:
+            self.probability[pits[0]-1][pits[1]-1] = 1.00
         # compute the probability
         for locat in frontier:
             # initialize
             if locat not in self.pitLocations:
+                breeze_new = self.breezeLocations.copy()
+                for pits in self.pitLocations:
+                    for k in self.UDLR(pits):
+                        if k in breeze_new:
+                            breeze_new.remove(k)
                 p_true = 0
                 p_false = 0
                 frontier_p = frontier.copy()
-                frontier_p.remove(locat)
-
-        print("frontier:" + str(frontier))
+                for i in it.product('01', repeat=len(frontier_p)):
+                    breeze = breeze_new.copy()
+                    false = 0
+                    for j in it.compress(frontier_p, i):
+                        for k in self.UDLR(j):
+                            if k in breeze:
+                                breeze.remove(k)
+                    for j in breeze:
+                        if self.UDRL(j) in frontier_p:
+                            false += 1
+                    if not false:
+                        t = list(i).count('1')
+                        f = len(i) - t
+                        if i[frontier.index(locat)] == '1':
+                            p_true += (0.2**t)*(0.8**f)
+                        else:
+                            p_false += (0.2**t)*(0.8**f)
+                p_true = p_true*0.2
+                p_false = p_false*0.8
+                p_true = p_true/(p_true + p_false)
+                self.probability[locat[0]-1][locat[1]-1] = p_true
+        self.PrintProbability()
 
 
 #  Global agent
