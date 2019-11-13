@@ -36,6 +36,7 @@ class Agent:
         self.breezeLocations = []
         self.pitLocations = []
         self.probability = []
+        self.randomlr = 0
 
     def Initialize(self):
         self.worldState.agentLocation = [1, 1]
@@ -43,8 +44,9 @@ class Agent:
         self.worldState.agentHasArrow = True
         self.worldState.agentHasGold = False
         self.previousAction = Action.CLIMB
-        self.probability = [[0.20]*5] * 5
+        self.probability = [[0.20]*5, [0.20]*5, [0.20]*5, [0.20]*5, [0.20]*5]
         self.actionList = []
+        self.randomlr = 0
 
         # HW5
         if (self.firstTry):
@@ -77,7 +79,6 @@ class Agent:
         action = self.actionList.pop(0)
         self.previousAction = action
         self.previousPercept = percept
-        a = input()
         return action
 
     def GameOver(self, score):
@@ -143,12 +144,26 @@ class Agent:
         self.AddNewLocation(self.visitedLocations,
                             self.worldState.agentLocation)
         self.AddNewLocation(self.safeLocations, self.worldState.agentLocation)
-        if (percept['Stench']):
+        if percept['Stench'] and percept['Breeze']:
+            self.AddNewLocation(self.stenchLocations,
+                                self.worldState.agentLocation)
+            self.AddNewLocation(self.breezeLocations,
+                                self.worldState.agentLocation)
+            self.ComputeProbability()
+            for k in self.UDLR(self.worldState.agentLocation):
+                if self.probability[k[0]-1][k[1]-1] < 0.5:
+                    self.AddNewLocation(self.safeLocations,
+                                      self.worldState.agentLocation)
+        elif percept['Stench']:
             self.AddNewLocation(self.stenchLocations,
                                 self.worldState.agentLocation)
         elif percept['Breeze']:
             self.AddNewLocation(self.breezeLocations,
                                 self.worldState.agentLocation)
+            for k in self.UDLR(self.worldState.agentLocation):
+                if self.probability[k[0]-1][k[1]-1] < 0.5:
+                    self.AddNewLocation(self.safeLocations,
+                                      self.worldState.agentLocation)
         else:
             self.AddNewLocation(self.clearLocations,
                                 self.worldState.agentLocation)
@@ -234,21 +249,35 @@ class Agent:
 
     def ChooseAction(self, percept):
         forwardLocation = self.GetGoForward()
+        if self.randomlr > 20:
+            self.randomlr = 0
+            action = Action.GOFORWARD
         if (percept['Stench'] and (self.worldState.agentLocation == [1, 1]) and
                 (len(self.possibleWumpusLocations) != 1)):
             action = Action.SHOOT
-        elif ((forwardLocation in self.safeLocations) and (forwardLocation
-                                                not in self.visitedLocations)):
+        elif (self.probability[min(forwardLocation[0]-1, 4)]
+              [min(forwardLocation[1]-1, 4)] > 0.5):
+            action = randint(1, 2)
+        elif ((forwardLocation in self.safeLocations)
+              and (forwardLocation not in self.visitedLocations)):
             # If happen to be facing safe unvisited location, then move there
+            print("GOGOGO")
             action = Action.GOFORWARD
         else:
+            if forwardLocation in self.safeLocations:
+                action = Action.GOFORWARD
             # Choose randomly from GOFORWARD, TURNLEFT, and TURNRIGHT, but
             # don't GOFORWARD into a possible wumpus location or a wall
             if ((forwardLocation in self.possibleWumpusLocations) or
                     self.OutsideWorld(forwardLocation)):
                 action = randint(1, 2)  # TURNLEFT, TURNRIGHT
             else:
+                print("randomchoose")
                 action = randint(0, 2)  # GOFORWARD, TURNLEFT, TURNRIGHT
+        if action == Action.GOFORWARD:
+            self.randomlr = 0
+        else:
+            self.randomlr += 1
         return action
     # HW5
     #
@@ -383,19 +412,20 @@ class Agent:
         right = [location[0]+1, location[1]]
         return [up, down, left, right]
 
-
     # hw9
     def PrintProbability(self):
         print("Probability")
-        for i in self.probability:
-            print("%.2f %.2f %.2f %.2f %.2f" % (i[0], i[1], i[2], i[3], i[4]))
+        for j in range(0, 5):
+            i = self.probability
+            print("%.2f %.2f %.2f %.2f %.2f" % (i[0][4-j], i[1][4-j],
+                                        i[2][4-j], i[3][4-j], i[4][4-j]))
+
     # hw9
     def ComputeProbability(self):
         frontier = []
         size = 5
         # compute frontier
         for locat in self.visitedLocations:
-            print('visited:', locat)
             self.probability[locat[0]-1][locat[1]-1] = 0.00
             up = [locat[0], locat[1]+1 if locat[1]+1 < size else locat[1]]
             down = [locat[0], locat[1]-1 if locat[1]-1 > 0 else locat[1]]
@@ -406,43 +436,127 @@ class Agent:
                     self.AddNewLocation(frontier, update)
         for pits in self.pitLocations:
             self.probability[pits[0]-1][pits[1]-1] = 1.00
+        for safe in self.safeLocations:
+            self.probability[min(max(safe[0]-1, 0), 4)]\
+                [min(max(safe[1]-1, 0), 4)] = 0.00
+        if not self.breezeLocations:
+            return self.PrintProbability()
         # compute the probability
+        frontier_d = frontier.copy()
         for locat in frontier:
             # initialize
-            if locat not in self.pitLocations:
-                breeze_new = self.breezeLocations.copy()
-                for pits in self.pitLocations:
-                    for k in self.UDLR(pits):
-                        if k in breeze_new:
-                            breeze_new.remove(k)
-                p_true = 0
-                p_false = 0
-                frontier_p = frontier.copy()
-                for i in it.product('01', repeat=len(frontier_p)):
-                    breeze = breeze_new.copy()
-                    false = 0
-                    for j in it.compress(frontier_p, i):
-                        for k in self.UDLR(j):
+            if locat in self.safeLocations:
+                frontier_d.remove(locat)
+            if locat in self.pitLocations:
+                frontier_d.remove(locat)
+        for locat in frontier_d:
+            breeze_new = self.breezeLocations.copy()
+            for pits in self.pitLocations:
+                for k in self.UDLR(pits):
+                    if k in breeze_new:
+                        breeze_new.remove(k)
+            p_true = 0
+            p_false = 0
+            for i in it.product('01', repeat=len(frontier_d)):
+                breeze = breeze_new.copy()
+                false = 0
+                for j in range(len(i)):
+                    if i[j] == '1':
+                        for k in self.UDLR(frontier_d[j]):
                             if k in breeze:
                                 breeze.remove(k)
-                    for j in breeze:
-                        if self.UDRL(j) in frontier_p:
+                for j in breeze:
+                    for k in self.UDLR(j):
+                        if k in frontier_d:
                             false += 1
-                    if not false:
-                        t = list(i).count('1')
-                        f = len(i) - t
-                        if i[frontier.index(locat)] == '1':
-                            p_true += (0.2**t)*(0.8**f)
-                        else:
-                            p_false += (0.2**t)*(0.8**f)
-                p_true = p_true*0.2
-                p_false = p_false*0.8
-                p_true = p_true/(p_true + p_false)
-                self.probability[locat[0]-1][locat[1]-1] = p_true
+                if not false:
+                    t = list(i).count('1')
+                    f = len(i) - t
+                    if i[frontier_d.index(locat)] == '1':
+                        p_true += (0.2**t)*(0.8**f)
+                    else:
+                        p_false += (0.2**t)*(0.8**f)
+            # p_true = p_true*0.2
+            # p_false = p_false*0.8
+            p_true = p_true/(p_true + p_false)
+            self.probability[locat[0]-1][locat[1]-1] = p_true
         self.PrintProbability()
 
 
+    # hw9
+
+    def GoToSafeLocat(self):
+        frontier = []
+        size = 5
+        # compute frontier
+        for locat in self.visitedLocations:
+            self.probability[locat[0]-1][locat[1]-1] = 0.00
+            up = [locat[0], locat[1]+1 if locat[1]+1 < size else locat[1]]
+            down = [locat[0], locat[1]-1 if locat[1]-1 > 0 else locat[1]]
+            left = [locat[0]-1 if locat[0]-1 > 0 else locat[0], locat[1]]
+            right = [locat[0]+1 if locat[0]+1 < size else locat[0], locat[1]]
+            for update in [up, down, left, right]:
+                if update not in self.visitedLocations:
+                    self.AddNewLocation(frontier, update)
+        for locat in frontier:
+            # initialize
+            if locat in self.safeLocations:
+                frontier.remove(locat)
+            if locat in self.pitLocations:
+                frontier.remove(locat)
+        for locat in frontier:
+            if self.probability[locat[0]-1][locat[1]-1] < 0.50:
+                return self.GoTo(locat)
+
+    # hw9
+    def GoTo(self, target):
+        print("target:", target)
+        path = []
+        location = self.worldState.agentLocation
+        lr = target[0] - location[0]
+        lr_n = abs(target[0] - location[0])
+        ud = target[1] - location[1]
+        ud_n = abs(target[1] - location[1])
+        new_locat = location
+        for i in range(lr_n+ud_n):
+            if i < ud_n:
+                print("UD:", ud, ud_n)
+                new_locat[1] = int(new_locat[1] + ud/ud_n)
+            else:
+                print("LR:", lr, lr_n)
+                new_locat[0] = int(new_locat[0] + lr/lr_n)
+            lo = new_locat.copy()
+            path.append(lo)
+        print("path!:", path)
+        currentLocation = self.worldState.agentLocation
+        currentOrientation = self.worldState.agentOrientation
+        for nextLocation in path[1:]:
+            if (nextLocation[0] > currentLocation[0]):
+                nextOrientation = Orientation.RIGHT
+            if (nextLocation[0] < currentLocation[0]):
+                nextOrientation = Orientation.LEFT
+            if (nextLocation[1] > currentLocation[1]):
+                nextOrientation = Orientation.UP
+            if (nextLocation[1] < currentLocation[1]):
+                nextOrientation = Orientation.DOWN
+            # Find shortest turn sequence
+            # (assuming RIGHT=0, UP=1, LEFT=2, DOWN=3)
+            diff = (currentOrientation - nextOrientation)
+            if ((diff == 1) or (diff == -3)):
+                self.actionList.append(Action.TURNRIGHT)
+            else:
+                if (diff != 0):
+                    self.actionList.append(Action.TURNLEFT)
+                if ((diff == 2) or (diff == -2)):
+                    self.actionList.append(Action.TURNLEFT)
+            self.actionList.append(Action.GOFORWARD)
+            currentLocation = nextLocation
+            currentOrientation = nextOrientation
+            action = self.actionList.pop(0)
+            return action
+
 #  Global agent
+
 myAgent = 0
 
 
