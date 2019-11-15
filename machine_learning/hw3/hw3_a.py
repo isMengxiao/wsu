@@ -44,8 +44,9 @@ def load_data(path):
 
 def NaiveBayes(data_train, data_test, data_name):
     right = 0
-    p1 = (data_train.classes.sum()+1)/(data_train.classes.count()+2)
-    p0 = 1 - p1
+    print("length:", len(data_train))
+    p1 = (data_train.classes.sum()+1)/(len(data_train)+2)
+    p0 = (len(data_train)-data_train.classes.sum()+1)/(len(data_train)+2)
     for i in range(len(data_test)):
         x = data_test.iloc[i][:-1]
         y = data_test.iloc[i][-1]
@@ -60,7 +61,6 @@ def NaiveBayes(data_train, data_test, data_name):
                 pu1_1 = data_train[data_train["classes"] == 1].sum()[word]
                 pu1_n = data_train[data_train["classes"] == 1].count()[word]
                 pu1 = pu1_1/pu1_n
-                # print(pu1)
                 pu0 = data_train[data_train["classes"] == 0].sum()[word]/\
                     data_train[data_train["classes"] == 0].count()[word]
                 if pu1:
@@ -79,6 +79,6 @@ def NaiveBayes(data_train, data_test, data_name):
 if __name__ == "__main__":
     path = "./data"
     data_train, data_test = load_data(path)
-    NaiveBayes(data_train, data_train, "train")
+    #NaiveBayes(data_train, data_train, "train")
     NaiveBayes(data_train, data_test, "test")
 
