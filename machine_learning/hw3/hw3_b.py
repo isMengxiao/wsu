@@ -12,8 +12,8 @@ import math
 
 
 def get_data():
-    train_data = pd.read_csv('data/fashion-mnist_train.csv')
-    test_data = pd.read_csv('data/fashion-mnist_test.csv')
+    train_data = pd.read_csv('./data/fashion-mnist_train.csv')
+    test_data = pd.read_csv('./data/fashion-mnist_test.csv')
     x_train = train_data[train_data.columns[1:]].values
     y_train = train_data.label.values
     x_test = test_data[test_data.columns[1:]].values
@@ -96,6 +96,7 @@ def train(model, lr, epochs, bs, opt, x_train, y_train, x_test, y_test, name):
     plt.ylabel("Accuracy")
     plt.title(name)
     plt.savefig(name+'.jpg')
+    plt.close()
 
 
 def normalize(x, m, s):
@@ -126,28 +127,25 @@ def find_lr(net, loss_func):
         optimizer.zero_grad()
         outputs = net.forward(xb)
         loss = loss_func(outputs, yb)
-        #Compute the smoothed loss
-        #print("loss: ", loss.item())
-        losses.append(loss.item())
-        lrs.append(lr)
+        # Compute the smoothed loss
         avg_loss = beta * avg_loss + (1-beta) *loss.item()
         smoothed_loss = avg_loss / (1 - beta**batch_num)
-        #Stop if the loss is exploding
+        # Stop if the loss is exploding
         if batch_num > 1 and smoothed_loss > 4 * best_loss:
             return log_lrs, losses
-        #Record the best loss
-        if smoothed_loss < best_loss or batch_num==1:
+        # Record the best loss
+        if smoothed_loss < best_loss or batch_num == 1:
             best_loss = smoothed_loss
-        #Store the values
+        # Store the values
         losses.append(smoothed_loss)
-        log_lrs.append(math.log10(lr))
-        #Do the SGD step
+        log_lrs.append(lr)
+        # Do the SGD step
         loss.backward()
         optimizer.step()
-        #Update the lr for the next step
+        # Update the lr for the next step
         lr *= mult
         optimizer.param_groups[0]['lr'] = lr
-    return log_lrs, losses, lrs
+    return log_lrs, losses
 
 
 if __name__ == "__main__":
@@ -175,8 +173,9 @@ if __name__ == "__main__":
 
     model_lrfinder = FashionMnistNet()
     loss_func = F.cross_entropy
-    log_lrs, losses, lrs = find_lr(model_lrfinder, loss_func)
-    lr = lrs[losses.index(min(losses))]
+    log_lrs, losses = find_lr(model_lrfinder, loss_func)
+    lr = log_lrs[losses.index(min(losses))]
+    print(lr)
 
     train(model_lrfinder, lr, epochs, bs, opt_norm,
           x_train, y_train, x_test, y_test, "Third train with better lr:")

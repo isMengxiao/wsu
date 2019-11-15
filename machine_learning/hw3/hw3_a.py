@@ -44,7 +44,6 @@ def load_data(path):
 
 def NaiveBayes(data_train, data_test, data_name):
     right = 0
-    print("length:", len(data_train))
     p1 = (data_train.classes.sum()+1)/(len(data_train)+2)
     p0 = (len(data_train)-data_train.classes.sum()+1)/(len(data_train)+2)
     for i in range(len(data_test)):
@@ -54,10 +53,6 @@ def NaiveBayes(data_train, data_test, data_name):
         p_false = p0
         for word in data_train.keys():
             if word != "classes":
-                # print(word)
-                # print(word)
-                # print(data_train[data_train["classes"] > 0].sum()[word])
-                # print(data_train[data_train["classes"] > 0].count()[word])
                 pu1_1 = data_train[data_train["classes"] == 1].sum()[word]
                 pu1_n = data_train[data_train["classes"] == 1].count()[word]
                 pu1 = pu1_1/pu1_n
@@ -67,7 +62,6 @@ def NaiveBayes(data_train, data_test, data_name):
                     p_true = p_true * pu1
                 if pu0:
                     p_false = p_false * pu0
-        #print("p=1", p_true)
         if max(p_true, p_false) == p_true:
             y_hat = 1
         else:
@@ -76,9 +70,10 @@ def NaiveBayes(data_train, data_test, data_name):
             right += 1
     print("%s accuracy:" % data_name, right/len(data_test))
 
+
 if __name__ == "__main__":
     path = "./data"
     data_train, data_test = load_data(path)
-    #NaiveBayes(data_train, data_train, "train")
+    NaiveBayes(data_train, data_train, "train")
     NaiveBayes(data_train, data_test, "test")
 
