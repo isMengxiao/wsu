@@ -2,7 +2,7 @@
 
 from MySVM import SVM_a, SVM_b, SVM_c
 from numpy import np
-from pandas import np
+from pandas import pd
 from KernelizedPerceptron import MyKP
 from sklearn.model_selection import train_test_split
 from DecisionTree import load_data, ID3_tree, test

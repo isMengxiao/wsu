@@ -1,0 +1,12 @@
+0.7284504232924317
+Third train with better lr:
+Accuracy:  10.0
+Accuracy:  10.0
+Accuracy:  10.0
+Accuracy:  10.0
+Accuracy:  10.0
+Accuracy:  10.0
+Accuracy:  10.0
+Accuracy:  10.0
+Accuracy:  10.0
+Accuracy:  10.0
