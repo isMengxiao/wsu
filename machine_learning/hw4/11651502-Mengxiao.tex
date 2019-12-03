@@ -1,0 +1,107 @@
+\documentclass[12pt]{article}
+\author{Mengxiao}
+	\title{Cpts570-hw4}
+	\usepackage{graphicx}
+\begin{document}
+	\maketitle
+	\pagebreak
+	\section{Analytical Part}
+		\subsection{Problem 1}
+            \subsubsection{a.}
+                Like in an exam, $s$ means in which question, $a$ means choose which option,
+                if choose the correct action $R(s,a)=5$, the wrong action $R(s,a)$ may be $0$ or $-1$.
+            \subsubsection{b.}
+                The original function is:
+                    $$V^0(s)=R(s)\ when(k=0)$$
+                    $$V^k(s)=R(s)+\max_a\sum_sT(s,a,s)V^{k-1}(s)\ when(k>0)$$\\
+                My update function is:
+                    $$V^0(s)=0\ when(k=0)$$
+                    $$V^k(s)=\max_aR(s,a)+\max_a\sum_sT(s,a,s)V^{k-1}(s)\ when (k>0)$$\\
+                Since we don't need to give the initial state any rewards, and when we choose the
+                action, we will hope to choose the one with the most rewards.
+            \subsubsection{c.}
+                We can use $q_{s,a}=(s,a)$ to map new states with the old states and actions, so that
+                we will transform the old function like:
+                    $$T'(q_{s,a},s')=1$$ 
+                Let $q_{s,a}$ be a new state in $s_1$, we will have $T'(s_1,s_1')$, since any of the
+                state with action in old function will have a "book keeping" state in new function.
+                $$R(s,a)=R'(s_1)$$
+                $$V^0(s_1)=R'(s_1)$$
+                $$V^k(s_1)=R'(s_1)+\max_a\sum_{s_1'}T'(s_1,s_1')*V^{k-1}(s_1')$$
+                $$\pi^{*'}(s_1,k)=\arg\max_a\sum_{s_1'}T'(s_1,s_1')*V^{k-1}(s_1')$$
+        \subsection{Problem 2}
+            Build a new state $s^*$ that this state is a one-one map of the current state $s$ and the
+            $k-1$ past state $s_1,s_2,\ldots,s_{k-1}$. And also, we change the transform function
+            $T$,\\
+            $T'(S^*,a,s')=Pr(s'|a,s,s_1,s_2,\ldots,s_{k-1}),if\ s'=(s'|a,s,s_1,\ldots,s_{k-1})$\\
+            $T'(s^*,a,s')=0,if\ s'\neq(s'|a,s,s_1,\ldots,s_{k-1})$
+        \subsection{Problem 3}
+            With state-action reward function $R(s,a)$:
+                $$V^*(s)=\max_aR(s,a)+\beta\sum_{s'}T(s,a,s')V^*(s')$$
+            With state-action reward function $R(s,a,s')$:
+                $$V^*(s)=\max_a\sum_{s'}T(s,a,s')(R(s,a,s')+\beta V^*(s'))$$
+        \subsection{Problem 4}
+            \subsubsection{a.}
+                $$V_0=R(s_0)+\beta V_1=\beta V_1$$
+                $$V_1=R(s_1)+\beta V_1=1+\beta V_1$$
+                Since $\beta=1$, we can know, $V_0=V_1,V_1=1+V_1\Rightarrow 0=1$, the result doesn't work.
+            \subsubsection{b.}
+                Since $\beta=0.9$, we can know, $V_0=0.9V_1,V_1=1+0.9V_1$\\
+                $\Rightarrow V_0=9,V_1=10$
+        \subsection{Problem 5}
+            This article mainly introduce the recent ensemble method with error-correcting output coding, Bagging and Boosting. Also, explains
+            why this method can perform better and why Adaboost does not overfit rapidly with some new experiments. The author says that we need
+            to think about three main features if we want to build a good ensemble classifier. The first one is statistic, the second one is calculate
+            and the third one is representational. A general purpose method is to contain randomness in the algorithm. Then, the author compare the
+            AdaBoost, Bagging and Randomized trees. Finally, the author talks about some basice reason about why ensemble method is better than single
+            classifier and suppose some experience result for clarify why AdaBoost is so well.
+        \subsection{Problem 6}
+			In the last few years, the use of big data research methods has developed very well, but a series of ethical
+            problems also followed. To avoid data science do harm to people and the world, people should follow rules.
+            1. Before proved individual, all the data are assumed to be people, people need to be careful about the sensitive
+            and private information. 2. Should get permit before using data since it may do harm to some people and privacy is
+            not just a binary value. 3. Avoid that the data can be reidentified by other people to prevent the disclosure of privacy.
+            4. Researchers should think about the influence about data sharing and take the safeguard measures actively. 5. Researchers
+            should know the limitation of the data that large scale of data do not means better, it always contains too much information
+            and chaos. 6. Take part in the discussion of ethical problems, not just accept the decision, it will help people understand the
+            problem better. 7. Researchers should make up a rule of conduct for the ethical problems in the organization or team, so that will
+            help reasearchers pay more attention to the ethicala problems and figure out it more efficiently. 8. Researchers should let their
+            code can be auditability, it will let their work be more understandable and can be copied. 9. Researchers should think a lot about
+            the influence about the study on big data, it always have some broader and deeper implications to the society. 10. Sometimes,
+            personal privacy is not the most important, public safety or natural disasters are much important than personal information.
+            So researachers should know when should they destroy the rules and when should they follow the moral code.
+        \subsection{Problem 7}
+			With the development of machine learning in the last few years, there is a situation that it is easy and cheap to build
+            a machine learning system but it is really hard and expensive to maintaining them. The author mainly talk about why the
+            machine learning system would make up technical debt and how to solve them. He thinks that it is based on the system instead
+            of code, so it is really hard to test and figure out. Also we cannot clean or find these debt with tools since the real-time
+            machine learning system will develop and influent themselves, it will let people cannot predict whether it appear or not.
+            The author thinks about some models may happen and says that they should be avoided or refactored. Also, if it is possible,
+            researchers should use less code of machine learning and normalize most of the glue code. It is worth to build some machine
+            learning system that would not build or can figure out debt by itslef.
+        \subsection{Problem 8}
+            With the development of machine learning system, it become more and more important nowadays. However, there also appeares a
+            lot of problems that we haven't seen before. The reliability of machien learning is really a serious problem. In this article,
+            the author talks about some test and monitoring needs to help people simplify product process and reduce the payment and debt
+            of machine learning system. Also, the author is focus on some typical machine learning system, the supervised machine learning
+            system that are trained continuously online and perform rapid, low-latency inference on a server.
+		\subsection{Problem 9}
+			In the speech, what the speaker mainly talk is the bias and discrimination of machine. We are in such a age that the computer technology is developing rapidly, but with the development of the technology in a lot of fields, we need to think about some ethical problem. Bias and discrimination lead unfair distribution that some work would prefer to use male employees, also the discrimination let police always doubt black people. THese situations are all unfair that would let our society become worse, since if we let the unfair keep going on, a lot of people will have no chance to take job or travel with pane because of the system have bias on them. And actually, the bias can be removed by people like delete some malicious data or use blacklist to help remove the bias. The Google has already done some work to help improve the fair of the systems, so we can make sure that no bias and discrimination can be done by us.
+		\subsection{Problem 10}
+			\par In the first part of the video, it mainly talk about the application of AI in China and China will be the leader of AI in the future.
+The second part mainly introduce deeping learning and machine learning make AI be really useful in nowadays. Like people use this technology to analysis whether the patients need surgey or not.
+
+The AI technology may cause a lot of people lose their jobs, like truck driver. If self-driving truck appear, these drivers will have less work to do, and they cannot live any more with such job.However, some researchers think it is not a trouble story because when we think about 20 or 30 years ago, we will also find almost 50\% of the job has been replaced by machines and computers. Also, like in the industrial revolution, it will decline a lot of people's living standard, but it is necessary. But it would also be a trouble for the government that robots will not pay tax, but they take a lot of job that would make value. Some of the robot manufacturers say that the robot may take away some jobs, but it will also provides more other jobs or new jobs. 
+
+In the United State nowadays, the society is really unfair. The employers of factories always think about how to reduce the number of employees, which lead the unfair of US become really higher in the past few years, the top 1\% of employer controls most of the money.
+
+Also, the privacy become a huge problem in the AI working, since researchers always find information or models from the data, and most of these data are come from people's daily lives and contain too much private information. How to protect people's privacy when using their data is a big challenge to AI workers. The same as the law, a series of law have been proposed to prevent the privacy. A new industrial revolution has happened and it allows the emergence of the surveillance society.
+
+The two AI superpower country, China and U.S., if these two country can work together, people will have chance to get a impressive progress on AI. And how the government use AI technology, use this tool to prevent citizens' safety or monitoring their personal lives will be a serious problem.
+    \section{Programming Part}
+        \subsection{Problem 1}
+            \includegraphics[height=10cm]{hw4_a}\\
+        \subsection{Problem 2}
+            \includegraphics[height=5cm]{hw4_b_Bagging}\\
+            \includegraphics[height=5cm]{hw4_b_Boosting}
+\end{document}
