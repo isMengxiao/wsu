@@ -1,0 +1,87 @@
+\documentclass[12pt]{article}
+\author{Mengxiao}
+    \title{Math553}
+    \usepackage{graphicx}
+\begin{document}
+    \maketitle
+    \pagebreak
+    \section{Abstract}
+    \section{Introduction}
+        \subsection{Konigsberg seven bridge problem}
+        \subsection{The problem}
+            I want to travel to Canc\'un this winter vacation, but it is really
+            an expensive trip, so I hope to solve money. But how can I save money
+            in a trip? What I know is that, I want to go Canc\'un, and I am living
+            in Pullman now. So my start point is Pullman, WA. And the end point is
+            Canc\'un. Also, if I need to spend so much money to fly to Canc\'un,
+            why not travel to some other cities near Canc\'un? So I also want to
+            go to the Guanajuanto, M\'erida and Mexico City, these are also really
+            beautiful or interesting viewpoints. And finally, I still need to go
+            back to Pullman for my next semester's study. It really looks like
+            a weighted undirected graph, so I think maybe I can save money with
+            the knowledge learn in Graph Theory this semester.
+    \section{What is Travelling Salesman Problem}
+        Travelling Salesman Problem, also called TSP. It is trying to solve
+        the problem that there is a salesman that want to travel around the
+        cities and sale his freights. Unfortunately, he need to spend money
+        or time on the way between cities. So, how to use the shortest path
+        to travel around these cities is the main problem. The TSP is like
+        the minimum connector problem but the salesman want to go back home
+        at the end.\cite{travellingsalesmanproblem}\\
+        According to the situation that the cost travel from $A$ to $B$ is not
+        equal to travel from $B$ to $A$, what we talk about is the asymmetric
+        travelling salesman problem (aTSP) here. \\
+        aTSP: Let $V={v_1,\cdots\cdots,v_n}$ be a set of cities, $A={(r,s):r,s\inV}$
+        be the edge set, and $d_{rs}\neqd_{sr}$ be the cost measure associated
+        with edge $(r,s)\in A$.\cite{matai2010traveling}\\
+        The aTSP is the problem that we need to find a minimal length closed tour
+        that visits each city once. In my case, cities $v_i\in V$ are given and $d_{rs}$
+        is the cost I will build with the fee of flight and time spend, then
+        we will have a typical aTSP.
+    \section{How to transform the real-world problem}
+        Now, since I want to solve my save money problem, I need to collect the data
+        at first. I need to know hwo much should I pay for the flight around these
+        cities, or where I want to go don't havev ariport and I need to try some
+        other ways. Then, I need to transform these data to a mathmatical model,
+        which will let me can use mathmatical ways to solve them. So, I started to
+        check the data of fees. However, it's really hard to confirm the fees spend
+        one the way. For example, if I just search the way from Pullman to Canc\'un,
+        I can get the flight from Pullman to Seattle, and then from Seattle to Canc\'un.
+        But I know I can drive to Seattle, and the flight from Seattle to Canc\'un may
+        be cheaper than the first choice. Also, what if I try to fly from Lewiston to
+        the Canc\'un? It may have some other situation. So I need to mkae some
+        rules for the transform form real-world problem to mathmatical models. \\
+        The formula I build at first for the way cost is:
+        $$C=f+T_1(t)+T_2(s)+e$$
+        In this formula,
+        $C$ means the total cost of the way.
+        $t$ means the time used on the flight.
+        $T_1$ is a transformation function that change the time for flight to a score,
+        this transformation function can be really personal like if I just want to let
+        it be a easy problem and don't care about the difference about long time flight
+        and short time flight, then I can set it like a first-order linear function. But
+        if I can only bear short time flight and cannot bear to sit for too long, it can
+        be a quadratic function or even exponential function. And I want to set it like
+        $s$ is the number of transit station in such flight.
+        $T_2$ is a transformation function that change the number of transit station to
+        a score, it is also really personal. And I want to set it like $50s$ here,
+        since I think the time I spend on one transit station is equal to 50 dollars.
+
+        \\I will all use the air tickets data on December 16, 2019. If people want to
+        use it on the real problem, they just need to calculate the day they will start
+        travel and compute the day they travl between these cities and then check
+        the tickets of flight.
+    \section{How to solve mathematical model}
+    \section{How to extend to this model}
+        Since I don't have enough time for build this model and test it, it looks really
+        simple. But I think this can be used for people who want to travel to some place,
+        and want to save time and money at the same time. I will adjustment the parameter
+        of the formula more carefully and think about more factors like the security issue,
+        the time limited for the trip and the limitaion of total spend, and finally expand
+        it to a more complete combinatorial optimization problem. Also, I can write the
+        code for calculate it automatically. And use some ways like Python Spider(a kind
+        of program that can catch the data from the website automatically), to catch
+        the flight information and clean them as the data used in my formula. I hope it
+        can be helpful for people who like traveling.
+\end{document}
+
