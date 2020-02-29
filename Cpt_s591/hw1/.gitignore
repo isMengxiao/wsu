@@ -1,0 +1,11 @@
+*.png
+*.tex
+*.log
+*.synctex.gz
+as-22july06
+celegansneural
+data
+lesmis
+polblogs
+data
+.ipynb_checkpoints

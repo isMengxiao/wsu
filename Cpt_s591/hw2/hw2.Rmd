@@ -1,0 +1,21 @@
+---
+title: "cs591_hw2_Mengxiao"
+author: "Mengxiao"
+date: "2020/2/29"
+output: pdf_document
+---
+
+```{r}
+library(igraph)
+```
+
+```{r}
+data = list()
+data[[1]] <- read.graph("data/as-22july06.gml", format="gml") ## Internet
+data[[2]] <- read.graph("data/dolphins.gml", format="gml")  ## Dolphin social network
+data[[3]] <- read.graph("data/lesmis.gml", format="gml")  ## Les Miserables
+data[[4]] <- read.graph("data/power.gml", format="gml")  ## Power grid
+```
+
+```{r}
+
